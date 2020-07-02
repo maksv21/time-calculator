@@ -1,45 +1,72 @@
-import React from "react";
-import StyledButton from "./StyledButton";
+import React from 'react';
+//import StyledButton from "./StyledButton";
+import styled from 'styled-components';
 
-// pattern: BUTTONS = Array of button arrays
-// a button array means a new row
-// a button array consist of two values: 1 for the left part of the keyboard, 2 for the right part
-// 1 value = an array of buttons
-// 2 value = a button
-// button = a string
-const BUTTONS = [
-  [['7', '8', '9'], 'DEL'],
-  [['4', '5', '6'], '÷'],
-  [['1', '2', '3'], '×'],
-  [['.', '0', ':'], '-'],
-  [['='], '+'],
+const BUTTONS_LEFT = [
+  ['7', '8', '9'],
+  ['4', '5', '6'],
+  ['1', '2', '3'],
+  ['.', '0', ':'],
+  ['(', ')', '='],
 ]
+
+const BUTTONS_RIGHT = ['DEL', '÷', '×', '-', '+',]
+
+const Keyboard = styled.div`
+  height: 100%;
+  display: flex;
+`
+
+const StyledButton = styled.button`
+  background-color: rgba(0,0,0,0);
+  border: none;
+  height: 100%;
+  width: 100%;
+  font-size: 14pt;
+`;
+
+
+const LeftColumn = styled.div`
+  background-color: #f7f7f7;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
+const Row = styled.div`
+  display: flex;
+  height: 100%;
+`
+
+const RightColumn = styled.div`
+  width: 100%;
+  flex-shrink: 3;
+  background-color: #26a69a;
+  display: flex;
+  flex-direction: column;
+`
+
+const mapButtons = btnValue => (
+  <StyledButton
+    key={btnValue}
+    onClick={() => console.log(btnValue)}>
+    {btnValue}
+  </StyledButton>
+);
 
 export default () => {
   return (
-    <div>
-      {
-        BUTTONS.map(buttonsRow => {
-          return (
-            <div className="row" key={buttonsRow}>
-              {
-                buttonsRow[0].map(btnValue => {
-                  return (
-                    <StyledButton
-                      key={btnValue}
-                      className="left-part"
-                      onClick={() => console.log(btnValue)}>{btnValue}</StyledButton>
-                  )
-                })
-              }
-
-              <StyledButton
-                className="right-part"
-                onClick={() => console.log(buttonsRow[1])}>{buttonsRow[1]}</StyledButton>
-            </div>
+    <Keyboard>
+      <LeftColumn>
+        {
+          BUTTONS_LEFT.map(buttonsRow =>
+            <Row key={buttonsRow}>{buttonsRow.map(mapButtons)}</Row>
           )
-        })
-      }
-    </div>
+        }
+      </LeftColumn>
+      <RightColumn>
+        {BUTTONS_RIGHT.map(mapButtons)}
+      </RightColumn>
+    </Keyboard>
   )
-}
+};
