@@ -1,6 +1,8 @@
 import React from 'react';
 //import StyledButton from "./StyledButton";
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { keyPressed } from '../../actions';
 
 const BUTTONS_LEFT = [
   ['7', '8', '9'],
@@ -10,7 +12,7 @@ const BUTTONS_LEFT = [
   ['(', ')', '='],
 ]
 
-const BUTTONS_RIGHT = ['DEL', '÷', '×', '-', '+',]
+const BUTTONS_RIGHT = ['C', 'DEL', '÷', '×', '-', '+',]
 
 const Keyboard = styled.div`
   height: 100%;
@@ -46,26 +48,28 @@ const RightColumn = styled.div`
   flex-direction: column;
 `
 
-const mapButtons = btnValue => (
+const mapButtons = (btnValue, dispatch) => (
   <StyledButton
     key={btnValue}
-    onClick={() => console.log(btnValue)}>
+    onClick={() => dispatch(keyPressed(btnValue))}>
     {btnValue}
   </StyledButton>
 );
 
 export default () => {
+  const dispatch = useDispatch();
+
   return (
     <Keyboard>
       <LeftColumn>
         {
           BUTTONS_LEFT.map(buttonsRow =>
-            <Row key={buttonsRow}>{buttonsRow.map(mapButtons)}</Row>
+            <Row key={buttonsRow}>{buttonsRow.map(btnValue => mapButtons(btnValue, dispatch))}</Row>
           )
         }
       </LeftColumn>
       <RightColumn>
-        {BUTTONS_RIGHT.map(mapButtons)}
+        {BUTTONS_RIGHT.map(btnValue => mapButtons(btnValue, dispatch))}
       </RightColumn>
     </Keyboard>
   )
