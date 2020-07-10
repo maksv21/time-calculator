@@ -5,8 +5,8 @@ import ExpressionInput from './components/ExpressionInput';
 import Keyboard from './components/Keyboard';
 
 const Main = styled.div`
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 `
 
 const ExpressionInputContainer = styled.div`

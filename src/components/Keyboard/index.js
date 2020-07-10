@@ -1,5 +1,4 @@
 import React from 'react';
-//import StyledButton from "./StyledButton";
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { keyPressed } from '../../actions';
@@ -9,7 +8,7 @@ const BUTTONS_LEFT = [
   ['4', '5', '6'],
   ['1', '2', '3'],
   ['.', '0', ':'],
-  ['(', ')', '='],
+  ['='],
 ]
 
 const BUTTONS_RIGHT = ['C', 'DEL', '÷', '×', '-', '+',]

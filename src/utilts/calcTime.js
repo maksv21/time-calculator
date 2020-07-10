@@ -1,33 +1,45 @@
+const errorMessage = {error: 'Error: Bad expression'};
+
 export default timeExpression => {
-  const expression = timeExpression
-    .replace(/[^0-9:.÷×+-]/g, '') // leave only numbers and operators
-    .replace(/[÷×+-.:]/g, value => value.charAt(0)) // +++++ -> +
-    .replace(/[÷×]/g, value => value === '×' ? '*' : '/') // ÷× -> /*
-    .replace(/\d+:\d*/g, value => { // time -> numbers
-      const timeValue = value.split(':');
-      timeValue[1] = String(
-        Math.trunc(timeValue[1] / 60 * 100)
-      );
-
-      return timeValue.join('.');
-    });
-
-  let result;
-  try {
-    result = numberToTime(new Function('return ' + expression)());
-  } catch {
-    result = 'Incorrect expression';
+  if(!isCorrectExp(timeExpression)) {
+    return errorMessage;
   }
 
-  return result;
+  const expression = timeExpression
+    .replace(/[÷×]/g, value => value === '×' ? '*' : '/') // ÷× -> /*
+    .replace(/^0+[1-9]/g, value => value.slice(-1)) // 00123 -> 123 in start
+    .replace(/[^\d]0[1-9]/g, value => value.replace('0', '')) // 123+00123 -> 123+123, in the middle of the expression
+
+    .replace(/\d+:\d*/g, value => { // time -> numbers
+      const timeValue = value.split(':');
+      timeValue[1] = String(timeValue[1] / 60);
+
+      return (+timeValue[0] + +timeValue[1]).toString();
+    });
+
+  try {
+    // eslint-disable-next-line  no-new-func
+    const calculatedValue = new Function('return ' + expression)();
+
+    return calculatedValue === Infinity ? errorMessage : numberToTime(calculatedValue);
+  } catch {
+    return errorMessage;
+  }
+}
+
+function isCorrectExp(exp) {
+  const newExp = exp.replace(/[^0-9:.÷×+-]/g, '') // leave only numbers and operators
+    .replace(/[-+÷×.:]{2,}/g, value => value[value.length - 1]) // ----++++ -> +
+
+  return newExp === exp;
 }
 
 function numberToTime(number) {
   let [hours, minutes] = number.toString().split('.'); // 0 - hours, 1 - minutes
 
-  minutes = minutes ? (minutes + '0').slice(0, 2) : '00'; // 00.5 -> 00.50
-  minutes = (Math.trunc(minutes / 100 * 60)).toString(); // 100 -> 60
-  minutes = ('0' + minutes).slice(-2) // 1 -> 01
+  minutes = '0.' + minutes;
+  minutes = Math.round(minutes * 60); // 100 -> 60
+  minutes = minutes ? ('0' + minutes).slice(-2) : '00'  // 1 -> 01
 
   return hours + ':' + minutes;
 }
