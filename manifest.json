@@ -1,6 +1,6 @@
 {
-  "short_name": "Time Calculator",
-  "name": "Time Calculator",
+  "short_name": "Time calculator",
+  "name": "Calculator that calculate hours and minutes",
   "icons": [
     {
       "src": "favicon.ico",

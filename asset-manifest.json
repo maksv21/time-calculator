@@ -1,23 +1,22 @@
 {
   "files": {
-    "main.css": "/day-planner/static/css/main.5f361e03.chunk.css",
-    "main.js": "/day-planner/static/js/main.01bdf329.chunk.js",
-    "main.js.map": "/day-planner/static/js/main.01bdf329.chunk.js.map",
-    "runtime-main.js": "/day-planner/static/js/runtime-main.5ac9428c.js",
-    "runtime-main.js.map": "/day-planner/static/js/runtime-main.5ac9428c.js.map",
-    "static/js/2.2969c82f.chunk.js": "/day-planner/static/js/2.2969c82f.chunk.js",
-    "static/js/2.2969c82f.chunk.js.map": "/day-planner/static/js/2.2969c82f.chunk.js.map",
-    "index.html": "/day-planner/index.html",
-    "precache-manifest.98679342b5f02a809bbfe1264e8fcc71.js": "/day-planner/precache-manifest.98679342b5f02a809bbfe1264e8fcc71.js",
-    "service-worker.js": "/day-planner/service-worker.js",
-    "static/css/main.5f361e03.chunk.css.map": "/day-planner/static/css/main.5f361e03.chunk.css.map",
-    "static/js/2.2969c82f.chunk.js.LICENSE.txt": "/day-planner/static/js/2.2969c82f.chunk.js.LICENSE.txt",
-    "static/media/logo.svg": "/day-planner/static/media/logo.5d5d9eef.svg"
+    "main.css": "/time-calculator/static/css/main.647f9978.chunk.css",
+    "main.js": "/time-calculator/static/js/main.60ae0a04.chunk.js",
+    "main.js.map": "/time-calculator/static/js/main.60ae0a04.chunk.js.map",
+    "runtime-main.js": "/time-calculator/static/js/runtime-main.b2fea543.js",
+    "runtime-main.js.map": "/time-calculator/static/js/runtime-main.b2fea543.js.map",
+    "static/js/2.e008f1d9.chunk.js": "/time-calculator/static/js/2.e008f1d9.chunk.js",
+    "static/js/2.e008f1d9.chunk.js.map": "/time-calculator/static/js/2.e008f1d9.chunk.js.map",
+    "index.html": "/time-calculator/index.html",
+    "precache-manifest.071e34e2a1b5dac8ce05ecefbda5366e.js": "/time-calculator/precache-manifest.071e34e2a1b5dac8ce05ecefbda5366e.js",
+    "service-worker.js": "/time-calculator/service-worker.js",
+    "static/css/main.647f9978.chunk.css.map": "/time-calculator/static/css/main.647f9978.chunk.css.map",
+    "static/js/2.e008f1d9.chunk.js.LICENSE.txt": "/time-calculator/static/js/2.e008f1d9.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.5ac9428c.js",
-    "static/js/2.2969c82f.chunk.js",
-    "static/css/main.5f361e03.chunk.css",
-    "static/js/main.01bdf329.chunk.js"
+    "static/js/runtime-main.b2fea543.js",
+    "static/js/2.e008f1d9.chunk.js",
+    "static/css/main.647f9978.chunk.css",
+    "static/js/main.60ae0a04.chunk.js"
   ]
 }
