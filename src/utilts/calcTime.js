@@ -1,8 +1,10 @@
-const errorMessage = {error: 'Error: Bad expression'};
+const errorIncorrectExp = {error: 'Error: Bad expression'};
+const errorTooBig = {error: 'Error: Number is too big'};
 
+// todo: check each number whether it is safe
 export default timeExpression => {
   if(!isCorrectExp(timeExpression)) {
-    return errorMessage;
+    return errorIncorrectExp;
   }
 
   const expression = timeExpression
@@ -21,9 +23,15 @@ export default timeExpression => {
     // eslint-disable-next-line  no-new-func
     const calculatedValue = new Function('return ' + expression)();
 
-    return calculatedValue === Infinity ? errorMessage : numberToTime(calculatedValue);
+    if(calculatedValue === Infinity) {
+      return errorIncorrectExp;
+    } else if(calculatedValue > Number.MAX_SAFE_INTEGER) {
+      return errorTooBig;
+    }
+
+    return numberToTime(calculatedValue);
   } catch {
-    return errorMessage;
+    return errorIncorrectExp;
   }
 }
 
