@@ -16,7 +16,7 @@ const BUTTONS_RIGHT = ['C', 'DEL', '÷', '×', '-', '+',]
 const Keyboard = styled.div`
   height: 100%;
   display: flex;
-`
+`;
 
 const StyledButton = styled.button`
   background-color: rgba(0,0,0,0);
@@ -24,6 +24,11 @@ const StyledButton = styled.button`
   height: 100%;
   width: 100%;
   font-size: 14pt;
+  
+  &:focus {
+    background-color: rgba(0,0,0,.15);
+    outline: none;
+  }
 `;
 
 
@@ -32,20 +37,20 @@ const LeftColumn = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-`
+`;
 
 const Row = styled.div`
   display: flex;
   height: 100%;
-`
+`;
 
 const RightColumn = styled.div`
   width: 100%;
   flex-shrink: 3;
-  background-color: #26a69a;
+  background-color: #ffe0b2;
   display: flex;
   flex-direction: column;
-`
+`;
 
 const mapButtons = (btnValue, dispatch) => (
   <StyledButton

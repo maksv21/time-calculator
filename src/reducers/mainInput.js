@@ -7,6 +7,8 @@ const defaultState = {
   preResult: null,
 };
 
+// todo: if user click : or . -> 0:, 0.
+
 export default (state = defaultState, action) => {
   const {type, keyValue} = action;
 
