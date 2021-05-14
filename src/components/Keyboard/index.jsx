@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { keyPressed } from '../../actions';
+import React from 'react'
+import styled from 'styled-components'
+import { useDispatch } from 'react-redux'
+import { keyPressed } from '../../reducers/mainInputSlice'
 
 const BUTTONS_LEFT = [
   ['7', '8', '9'],
@@ -11,38 +11,37 @@ const BUTTONS_LEFT = [
   ['='],
 ]
 
-const BUTTONS_RIGHT = ['C', 'DEL', '÷', '×', '-', '+',]
+const BUTTONS_RIGHT = ['C', 'DEL', '÷', '×', '-', '+']
 
 const Keyboard = styled.div`
   height: 100%;
   display: flex;
-`;
+`
 
 const StyledButton = styled.button`
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   border: none;
   height: 100%;
   width: 100%;
   font-size: 14pt;
-  
+
   &:focus {
-    background-color: rgba(0,0,0,.15);
+    background-color: rgba(0, 0, 0, 0.15);
     outline: none;
   }
-`;
-
+`
 
 const LeftColumn = styled.div`
   background-color: #f7f7f7;
   width: 100%;
   display: flex;
   flex-direction: column;
-`;
+`
 
 const Row = styled.div`
   display: flex;
   height: 100%;
-`;
+`
 
 const RightColumn = styled.div`
   width: 100%;
@@ -50,31 +49,29 @@ const RightColumn = styled.div`
   background-color: #ffe0b2;
   display: flex;
   flex-direction: column;
-`;
+`
 
 const mapButtons = (btnValue, dispatch) => (
-  <StyledButton
-    key={btnValue}
-    onClick={() => dispatch(keyPressed(btnValue))}>
+  <StyledButton key={btnValue} onClick={() => dispatch(keyPressed(btnValue))}>
     {btnValue}
   </StyledButton>
-);
+)
 
 export default () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   return (
     <Keyboard>
       <LeftColumn>
-        {
-          BUTTONS_LEFT.map(buttonsRow =>
-            <Row key={buttonsRow}>{buttonsRow.map(btnValue => mapButtons(btnValue, dispatch))}</Row>
-          )
-        }
+        {BUTTONS_LEFT.map((buttonsRow) => (
+          <Row key={buttonsRow}>
+            {buttonsRow.map((btnValue) => mapButtons(btnValue, dispatch))}
+          </Row>
+        ))}
       </LeftColumn>
       <RightColumn>
-        {BUTTONS_RIGHT.map(btnValue => mapButtons(btnValue, dispatch))}
+        {BUTTONS_RIGHT.map((btnValue) => mapButtons(btnValue, dispatch))}
       </RightColumn>
     </Keyboard>
   )
-};
+}
