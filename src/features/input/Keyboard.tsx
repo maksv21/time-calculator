@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import { FC, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
@@ -54,7 +54,11 @@ const Keyboard: FC = () => {
         {BUTTONS_LEFT.map((buttonsRow) => (
           <div key={buttonsRow.toString()}>
             {buttonsRow.map((btnValue) => (
-              <button type="button" onClick={() => handleKeyClick(btnValue)}>
+              <button
+                key={btnValue.toString()}
+                type="button"
+                onClick={() => handleKeyClick(btnValue)}
+              >
                 {btnValue}
               </button>
             ))}
@@ -73,7 +77,11 @@ const Keyboard: FC = () => {
       </button>
 
       {OPERATORS_RIGHT.map((btnValue) => (
-        <button type="button" onClick={() => handleKeyClick(btnValue)}>
+        <button
+          key={btnValue.toString()}
+          type="button"
+          onClick={() => handleKeyClick(btnValue)}
+        >
           {btnValue}
         </button>
       ))}

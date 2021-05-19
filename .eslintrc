@@ -23,10 +23,16 @@
       }
     },
     "rules": {
+      // eslint
       "semi": 0,
-      "import/prefer-default-export": "off",
-      // this rule caused an error with eslint
-      "import/newline-after-import": "off",
+      "no-else-return": "warn",
+      
+      // react
+      "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
+      "react/react-in-jsx-scope": "off",
+
+      // modules
+      // prettier
       "prettier/prettier": [
         "warn", {
           "semi": false,
@@ -39,6 +45,7 @@
           "state"
         ]
       }],
+      // unused imports
       "no-unused-vars": "off",
 		  "unused-imports/no-unused-imports": "warn",
 		  "unused-imports/no-unused-vars": [
@@ -46,7 +53,10 @@
 			  { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
 		  ],
       "@typescript-eslint/no-unused-vars": ["off"],
-      "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
-      "no-else-return": "warn"
+
+      //other
+      "import/prefer-default-export": "off",
+      // this rule caused an error with eslint
+      "import/newline-after-import": "off"
     }
   }

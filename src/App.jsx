@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 
 import ExpressionInput from './components/ExpressionInput'
@@ -7,7 +6,7 @@ import Keyboard from './features/input/Keyboard'
 const Main = styled.div`
   height: 100%;
   width: 100%;
-` 
+`
 
 const ExpressionInputContainer = styled.div`
   height: 30%;

@@ -1,4 +1,4 @@
-import React from 'react'
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom'
 import './index.css'
 import { Provider } from 'react-redux'
@@ -7,11 +7,11 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(
-  <React.StrictMode>
+  <StrictMode>
     <Provider store={store}>
       <App />
     </Provider>
-  </React.StrictMode>,
+  </StrictMode>,
   document.getElementById('root')
 )
 
