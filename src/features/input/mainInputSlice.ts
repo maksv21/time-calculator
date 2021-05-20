@@ -103,6 +103,7 @@ export const mainInputSlice = createSlice({
 
     clearAllKeyPressed: (state) => {
       state.value = ''
+      state.preResult = ''
     },
   },
 })

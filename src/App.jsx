@@ -6,6 +6,9 @@ import Keyboard from './features/input/Keyboard'
 const Main = styled.div`
   height: 100%;
   width: 100%;
+
+  max-width: 900px;
+  max-height: 1200px;
 `
 
 const ExpressionInputContainer = styled.div`

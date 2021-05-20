@@ -1,7 +1,10 @@
-import { StrictMode } from 'react';
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
 import { Provider } from 'react-redux'
+import { ThemeProvider } from '@material-ui/styles'
+
+import './index.css'
+import theme from 'app/theme'
 import { store } from 'app/store'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
@@ -9,7 +12,9 @@ import * as serviceWorker from './serviceWorker'
 ReactDOM.render(
   <StrictMode>
     <Provider store={store}>
-      <App />
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
     </Provider>
   </StrictMode>,
   document.getElementById('root')

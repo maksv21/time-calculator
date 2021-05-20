@@ -1,16 +1,21 @@
 import { FC, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+import Grid from '@material-ui/core/Grid'
 
+import { ButtonBase } from '@material-ui/core'
 import {
   clearAllKeyPressed,
   deleteKeyPressed,
   equalsKeyPressed,
   generalKeyPressed,
   OperatorKeys,
-} from './mainInputSlice'
-import type { GeneralKey } from './mainInputSlice'
+} from '../mainInputSlice'
+
+import type { GeneralKey } from '../mainInputSlice'
+import useStyles from './styles'
 
 const Keyboard: FC = () => {
+  const styles = useStyles()
   const dispatch = useDispatch()
 
   const BUTTONS_LEFT: GeneralKey[][] = [
@@ -48,45 +53,53 @@ const Keyboard: FC = () => {
     [dispatch]
   )
 
+  const CalcButton: FC<{
+    onClick: () => void
+    children: string
+  }> = ({ onClick, children }) => (
+    <ButtonBase className={styles.button} onClick={onClick}>
+      {children}
+    </ButtonBase>
+  )
+
   return (
-    <div>
-      <div>
+    <Grid className={styles.root} container xs={12}>
+      <Grid container item xs={9}>
         {BUTTONS_LEFT.map((buttonsRow) => (
-          <div key={buttonsRow.toString()}>
+          <Grid item container xs={12} key={buttonsRow.toString()}>
             {buttonsRow.map((btnValue) => (
-              <button
+              <CalcButton
                 key={btnValue.toString()}
-                type="button"
                 onClick={() => handleKeyClick(btnValue)}
               >
                 {btnValue}
-              </button>
+              </CalcButton>
             ))}
-          </div>
+          </Grid>
         ))}
-        <button type="button" onClick={handleEqualsClick}>
-          =
-        </button>
-      </div>
+      </Grid>
 
-      <button type="button" onClick={handleDelClick}>
-        C
-      </button>
-      <button type="button" onClick={handleClearAllClick}>
-        DEL
-      </button>
+      <Grid
+        className={styles.rightButtons}
+        container
+        item
+        xs={3}
+        direction="column"
+      >
+        <CalcButton onClick={handleDelClick}>DEL</CalcButton>
 
-      {OPERATORS_RIGHT.map((btnValue) => (
-        <button
-          key={btnValue.toString()}
-          type="button"
-          onClick={() => handleKeyClick(btnValue)}
-        >
-          {btnValue}
-        </button>
-      ))}
-      <div />
-    </div>
+        {OPERATORS_RIGHT.map((btnValue) => (
+          <CalcButton
+            key={btnValue.toString()}
+            onClick={() => handleKeyClick(btnValue)}
+          >
+            {btnValue}
+          </CalcButton>
+        ))}
+
+        <CalcButton onClick={handleEqualsClick}>=</CalcButton>
+      </Grid>
+    </Grid>
   )
 }
 
