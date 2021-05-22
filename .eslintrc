@@ -30,6 +30,8 @@
       // react
       "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
       "react/react-in-jsx-scope": "off",
+      "react/jsx-props-no-spreading": "off",
+
 
       // modules
       // prettier

@@ -1,8 +1,9 @@
 import { FC, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import Grid from '@material-ui/core/Grid'
-
 import { ButtonBase } from '@material-ui/core'
+import { useLongPress } from 'react-use'
+
 import {
   clearAllKeyPressed,
   deleteKeyPressed,
@@ -48,16 +49,15 @@ const Keyboard: FC = () => {
     [dispatch]
   )
 
-  const handleClearAllClick = useCallback(
-    () => dispatch(clearAllKeyPressed()),
-    [dispatch]
+  const handleDelLongPress = useLongPress(
+    useCallback(() => dispatch(clearAllKeyPressed()), [dispatch])
   )
 
   const CalcButton: FC<{
     onClick: () => void
     children: string
-  }> = ({ onClick, children }) => (
-    <ButtonBase className={styles.button} onClick={onClick}>
+  }> = ({ onClick, children, ...props }) => (
+    <ButtonBase className={styles.button} onClick={onClick} {...props}>
       {children}
     </ButtonBase>
   )
@@ -86,7 +86,9 @@ const Keyboard: FC = () => {
         xs={3}
         direction="column"
       >
-        <CalcButton onClick={handleDelClick}>DEL</CalcButton>
+        <CalcButton onClick={handleDelClick} {...handleDelLongPress}>
+          DEL
+        </CalcButton>
 
         {OPERATORS_RIGHT.map((btnValue) => (
           <CalcButton
