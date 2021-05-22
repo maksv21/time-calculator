@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 
-const rippleSize = ' 30vw'
+// todo: CHAR-37/add round ripple
+// const rippleSize = ' 30vw'
 
 const useStyles = makeStyles((theme) => ({
   root: {
