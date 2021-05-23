@@ -22,6 +22,14 @@ const useStyles = makeStyles<Theme, Props>((theme) => ({
     transition: 'all 0.1s',
     whiteSpace: 'nowrap',
     fontSize: (props) => `${props.fontSize}rem`,
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+    /* Hide scrollbar for IE, Edge and Firefox */
+    '-ms-overflow-style': 'none' /* IE and Edge */,
+    'scrollbar-width': 'none' /* Firefox */,
   },
 }))
 

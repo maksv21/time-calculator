@@ -27,6 +27,9 @@
       "semi": 0,
       "no-else-return": "warn",
       "no-debugger": "warn",
+      "consistent-return": "off",
+      "no-param-reassign": ["error", { "props": false }],
+
       
       // react
       "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
@@ -42,12 +45,6 @@
           "singleQuote": true
         }
       ],
-      "no-param-reassign": ["error", {
-        "props": true,
-        "ignorePropertyModificationsFor": [
-          "state"
-        ]
-      }],
       // unused imports
       "no-unused-vars": "off",
 		  "unused-imports/no-unused-imports": "warn",
