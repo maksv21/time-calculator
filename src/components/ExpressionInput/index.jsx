@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 
-import getTextWidth from '../../utilts/getTextWidth'
+import CustomInput from 'features/input/CustomInput'
 
 const InputContainer = styled.div`
   height: 100%;
@@ -10,7 +10,6 @@ const InputContainer = styled.div`
   justify-content: center;
   flex-flow: column;
   text-align: right;
-  padding: 0 10px;
 `
 
 // todo: change padding too
@@ -23,16 +22,14 @@ const InputValue = styled.div`
     const newFontSize = (currSize / 100) * sizeDiff * 0.9 // -10 % for better view
 
     if (newFontSize > maxSize) {
-      return maxSize;
-    } else if (newFontSize < minSize) {
-      return minSize;
+      return maxSize
+    }
+    if (newFontSize < minSize) {
+      return minSize
     }
 
     return newFontSize
   }}px;
-  overflow: auto;
-  transition: all 0.1s;
-  white-space: nowrap;
 `
 
 const PreResult = styled.div`
@@ -51,7 +48,7 @@ export default () => {
     currSize: 1, // any number to set the type
   })
 
-  useEffect(() => {
+  /* useEffect(() => {
     const inputWidth = inputValueEl.current.clientWidth
     const inputTextWidth = getTextWidth(inputValueEl.current)
 
@@ -59,17 +56,11 @@ export default () => {
       diff: (100 / inputTextWidth) * inputWidth,
       currSize: parseInt(getComputedStyle(inputValueEl.current).fontSize, 10),
     })
-  }, [inputValue])
+  }, [inputValue]) */
 
   return (
     <InputContainer>
-      <InputValue
-        ref={inputValueEl}
-        sizeDiff={fontInfo.diff}
-        currSize={fontInfo.currSize}
-      >
-        {inputValue}
-      </InputValue>
+      <CustomInput value={inputValue} fontSize={5.5} minFontSize={3.5} />
       <PreResult>{preResult}</PreResult>
     </InputContainer>
   )

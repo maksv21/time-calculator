@@ -50,8 +50,7 @@ export const mainInputSlice = createSlice({
   initialState,
   reducers: {
     generalKeyPressed: (state, action: PayloadAction<GeneralKey>) => {
-      // todo: addCursor CHAR-13
-      state.cursorPosition = state.value.length
+      state.cursorPosition += 1
 
       const pressedKeyValue = action.payload
 
@@ -125,11 +124,13 @@ export const mainInputSlice = createSlice({
     deleteKeyPressed: (state) => {
       state.value = state.value.slice(0, -1)
       state.preResult = enhanceInputValue(state.value)
+      if (state.cursorPosition > 0) state.cursorPosition -= 1
     },
 
     clearAllKeyPressed: (state) => {
       state.value = ''
       state.preResult = ''
+      state.cursorPosition = 0
     },
   },
 })

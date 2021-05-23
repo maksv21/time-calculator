@@ -1,5 +1,7 @@
 import { createMuiTheme } from '@material-ui/core'
 
+export const FONT_FAMILY = '"Roboto", "Helvetica", "Arial", sans-serif'
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -8,6 +10,10 @@ const theme = createMuiTheme({
     secondary: {
       main: '#ff9100',
     },
+  },
+  typography: {
+    fontSize: 10,
+    fontFamily: FONT_FAMILY,
   },
 })
 

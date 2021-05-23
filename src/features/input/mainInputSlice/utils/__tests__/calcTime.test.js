@@ -1,4 +1,4 @@
-import calcTime from '../../features/input/mainInputSlice/utils/calcTime'
+import calcTime from '../calcTime'
 
 describe('calcTime main functionality', () => {
   it('If expression correct, should return time', () => {

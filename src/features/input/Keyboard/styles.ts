@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     flex: 1,
     fontFamily: 'Roboto',
-    fontSize: 25,
+    fontSize: '2.5rem',
 
     // todo: CHAR-37/add round ripple
     // '& .MuiTouchRipple-root': {

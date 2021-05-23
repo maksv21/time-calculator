@@ -26,6 +26,7 @@
       // eslint
       "semi": 0,
       "no-else-return": "warn",
+      "no-debugger": "warn",
       
       // react
       "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],

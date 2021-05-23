@@ -50,7 +50,8 @@ const Keyboard: FC = () => {
   )
 
   const handleDelLongPress = useLongPress(
-    useCallback(() => dispatch(clearAllKeyPressed()), [dispatch])
+    useCallback(() => dispatch(clearAllKeyPressed()), [dispatch]),
+    { isPreventDefault: false }
   )
 
   const CalcButton: FC<{
@@ -63,7 +64,7 @@ const Keyboard: FC = () => {
   )
 
   return (
-    <Grid className={styles.root} container xs={12}>
+    <Grid className={styles.root} container>
       <Grid container item xs={9}>
         {BUTTONS_LEFT.map((buttonsRow) => (
           <Grid item container xs={12} key={buttonsRow.toString()}>
