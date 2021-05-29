@@ -1,62 +1,62 @@
 {
-    "extends": [
-      "react-app",
-      "plugin:jsx-a11y/recommended",
-      // "airbnb-typescript"
-      "airbnb-typescript-prettier",
+  "extends": [
+    "react-app",
+    "plugin:jsx-a11y/recommended",
+    // "airbnb-typescript"
+    "airbnb-typescript-prettier",
 
-      "prettier"
-    ],
-    "plugins": [
-      "jsx-a11y",
-      "unused-imports",
-      "prettier"
-    ],
-    "parserOptions": {
-      "project": "./tsconfig.json"
-    },
-    "settings": {
-      "import/resolver": {
-        "node": {
-          "paths": ["src"]
-        }
+    "prettier"
+  ],
+  "plugins": [
+    "jsx-a11y",
+    "unused-imports",
+    "prettier"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"]
       }
-    },
-    "rules": {
-      // eslint
-      "semi": 0,
-      "no-else-return": "warn",
-      "no-debugger": "warn",
-      "consistent-return": "off",
-      "no-param-reassign": ["error", { "props": false }],
-
-      
-      // react
-      "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
-      "react/react-in-jsx-scope": "off",
-      "react/jsx-props-no-spreading": "off",
-
-
-      // modules
-      // prettier
-      "prettier/prettier": [
-        "warn", {
-          "semi": false,
-          "singleQuote": true
-        }
-      ],
-      // unused imports
-      "no-unused-vars": "off",
-		  "unused-imports/no-unused-imports": "warn",
-		  "unused-imports/no-unused-vars": [
-			 "warn",
-			  { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
-		  ],
-      "@typescript-eslint/no-unused-vars": ["off"],
-
-      //other
-      "import/prefer-default-export": "off",
-      // this rule caused an error with eslint
-      "import/newline-after-import": "off"
     }
+  },
+  "rules": {
+    // eslint
+    "semi": 0,
+    "no-else-return": "warn",
+    "no-debugger": "warn",
+    "consistent-return": "off",
+    "no-param-reassign": ["error", { "props": false }],
+
+    
+    // react
+    "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-props-no-spreading": "off",
+
+
+    // modules
+    // prettier
+    "prettier/prettier": [
+      "warn", {
+        "semi": false,
+        "singleQuote": true
+      }
+    ],
+    // unused imports
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "warn",
+    "unused-imports/no-unused-vars": [
+     "warn",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ],
+    "@typescript-eslint/no-unused-vars": ["off"],
+
+    //other
+    "import/prefer-default-export": "off",
+    // this rule caused an error with eslint
+    "import/newline-after-import": "off"
   }
+}

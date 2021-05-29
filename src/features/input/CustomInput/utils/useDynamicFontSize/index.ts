@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import getTextWidth from './getTextWidth'
 
-import type { InputElement } from '../types'
+import type { InputElement } from '../../types'
 
 interface Props {
   value?: string

@@ -6,16 +6,15 @@ export interface Props {
   fontSize: number
 }
 
+const inputPadding = '25px'
+
 const useStyles = makeStyles<Theme, Props>((theme) => ({
   root: {
     transition: 'padding 0.1s',
   },
   padding: {
-    width: '15px',
+    width: inputPadding,
     display: 'inline-block',
-  },
-  rootPadding: {
-    padding: '0 10px',
   },
   input: {
     overflow: 'auto',
@@ -23,13 +22,24 @@ const useStyles = makeStyles<Theme, Props>((theme) => ({
     whiteSpace: 'nowrap',
     fontSize: (props) => `${props.fontSize}rem`,
 
-    /* Hide scrollbar for Chrome, Safari and Opera */
+    /* Hide scrollbar for Chromium browsers */
     '&::-webkit-scrollbar': {
       display: 'none',
     },
-    /* Hide scrollbar for IE, Edge and Firefox */
-    '-ms-overflow-style': 'none' /* IE and Edge */,
+    /* Hide scrollbar for Firefox */
     'scrollbar-width': 'none' /* Firefox */,
+
+    // for cursor
+    position: 'relative',
+  },
+  cursor: {
+    background: theme.palette.primary.contrastText,
+    width: '.2rem',
+    height: (props) => `${props.fontSize + 0.5}rem`,
+    position: 'absolute',
+    display: 'inline-block',
+    right: 0,
+    marginRight: `${parseInt(inputPadding, 10) - 2}px`, // indent the cursor a bit to the right
   },
 }))
 
