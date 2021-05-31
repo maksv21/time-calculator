@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { CursorElement, InputValue } from '../../types'
+import type { CursorElement, InputValue } from '../../types'
 import useStyles from './styles'
 
 interface Props {
@@ -20,6 +20,7 @@ const useAnimation = ({
 
   const timerIdRef = useRef<ReturnType<typeof setTimeout>>()
 
+  // apply animation to the cursor
   useEffect(() => {
     if (!cursorElem) return
 
@@ -34,6 +35,7 @@ const useAnimation = ({
     }
   }, [isCursorAnimationVisible, classes.blinkingAnimation, cursorElem])
 
+  // stop animation on value change
   useEffect(() => {
     if (!cursorElem || !isCursorVisible) return
 
@@ -47,7 +49,7 @@ const useAnimation = ({
     return () => {
       if (timerIdRef.current) clearTimeout(timerIdRef.current)
     }
-  }, [inputValue, cursorElem])
+  }, [inputValue, cursorElem, isCursorVisible])
 }
 
 export default useAnimation

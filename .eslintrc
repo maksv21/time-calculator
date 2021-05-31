@@ -30,12 +30,13 @@
     "consistent-return": "off",
     "no-param-reassign": ["error", { "props": false }],
 
+    // ts
+    "@typescript-eslint/consistent-type-imports": ["warn", {"prefer": "type-imports"}],
     
     // react
     "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
-
 
     // modules
     // prettier

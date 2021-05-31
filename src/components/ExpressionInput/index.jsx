@@ -40,7 +40,9 @@ const PreResult = styled.div`
 `
 
 export default () => {
-  const { value: inputValue, preResult } = useSelector((s) => s.mainInput)
+  const { valueToRender: inputValue, preResult } = useSelector(
+    (s) => s.mainInput
+  )
   const inputValueEl = useRef(null)
 
   const [fontInfo, setFontInfo] = useState({

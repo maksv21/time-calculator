@@ -1,18 +1,19 @@
-import { FC, useCallback } from 'react'
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import { ButtonBase } from '@material-ui/core'
 import { useLongPress } from 'react-use'
+import type { FC } from 'react'
 
 import {
   clearAllKeyPressed,
-  deleteKeyPressed,
   equalsKeyPressed,
-  generalKeyPressed,
-  OperatorKeys,
+  generalOrDelKeyPressed,
 } from '../mainInputSlice'
 
-import type { GeneralKey } from '../mainInputSlice'
+import type { GeneralKey } from '../mainInputSlice/types'
+import { DEL_KEY, OperatorKeys } from '../mainInputSlice/types'
+
 import useStyles from './styles'
 
 const Keyboard: FC = () => {
@@ -35,7 +36,7 @@ const Keyboard: FC = () => {
 
   const handleKeyClick = useCallback(
     (clickedKeyValue: GeneralKey) =>
-      dispatch(generalKeyPressed(clickedKeyValue)),
+      dispatch(generalOrDelKeyPressed(clickedKeyValue)),
     [dispatch]
   )
 
@@ -45,7 +46,7 @@ const Keyboard: FC = () => {
   )
 
   const handleDelClick = useCallback(
-    () => dispatch(deleteKeyPressed()),
+    () => dispatch(generalOrDelKeyPressed(DEL_KEY)),
     [dispatch]
   )
 

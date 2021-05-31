@@ -1,145 +1,126 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 import calcTimeNoType from './utils/calcTime'
-import runEnhancers from './utils/textEnhancers/runEnhancers'
+import runTextTesters from './utils/textTesters/runTextTesters'
+import type { GeneralKey, HandleKeyPressFunc, MainInputState } from './types'
+import { DEL_KEY } from './types'
 
 const calcTime = (exp: string): string | { error: string } =>
   calcTimeNoType(exp)
 
-interface MainInputState {
-  value: string
-  preResult: null | string
-  cursorPosition: number
-}
-
 const initialState: MainInputState = {
   value: '',
+  valueToRender: null,
   preResult: null,
+  error: null,
   cursorPosition: 0,
 }
 
-// todo: if user click : or . -> 0:, 0.
+const handleGeneralKeyPress: HandleKeyPressFunc = (
+  prevInputValue,
+  cursorPosition,
+  pressedKey
+) => {
+  const gluedValue =
+    prevInputValue.substring(0, cursorPosition) +
+    pressedKey +
+    prevInputValue.substring(cursorPosition)
 
-export type NumberKeys =
-  | '0'
-  | '1'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '7'
-  | '8'
-  | '9'
+  const newInputValue = gluedValue // todo: CHAR-38 runTextEnhancers(prevInputValue, gluedValue)
 
-export enum OperatorKeys {
-  Plus = '+',
-  Minus = '-',
-  Div = '÷',
-  Mult = '×',
-  Decimal = '.',
-  Colon = ':',
+  return {
+    newInputValue,
+    newCursorPosition: cursorPosition + 1,
+    isTestModeStrict: true,
+  }
 }
 
-export type GeneralKey = NumberKeys | OperatorKeys
+const handleDelKeyPress: HandleKeyPressFunc = (
+  prevInputValue,
+  cursorPosition
+) => {
+  const isTestModeStrict = false
 
-const enhanceInputValue = (inputValue: string): string =>
-  runEnhancers(inputValue, [])
+  if (cursorPosition !== 0) {
+    return {
+      newInputValue:
+        prevInputValue.slice(0, cursorPosition - 1) +
+        prevInputValue.slice(cursorPosition),
+      newCursorPosition: cursorPosition - 1,
+      isTestModeStrict,
+    }
+  }
+
+  return {
+    newInputValue: prevInputValue.slice(1),
+    newCursorPosition: cursorPosition,
+    isTestModeStrict,
+  }
+}
 
 export const mainInputSlice = createSlice({
   name: 'mainInput',
   initialState,
   reducers: {
-    generalKeyPressed: (state, action: PayloadAction<GeneralKey>) => {
-      const pressedKeyValue = action.payload
+    generalOrDelKeyPressed: (
+      state,
+      action: PayloadAction<GeneralKey | typeof DEL_KEY>
+    ) => {
+      const pressedKey = action.payload
 
-      const newInputValue =
-        state.value.substring(0, state.cursorPosition) +
-        pressedKeyValue +
-        state.value.substring(state.cursorPosition)
+      const { newInputValue, newCursorPosition, isTestModeStrict } =
+        pressedKey === DEL_KEY
+          ? handleDelKeyPress(state.value, state.cursorPosition)
+          : handleGeneralKeyPress(state.value, state.cursorPosition, pressedKey)
 
-      const enhancedInputValue = enhanceInputValue(newInputValue)
+      const testedInputValue = runTextTesters({
+        prevValue: state.value,
+        newValue: newInputValue,
+        isTestModeStrict,
+      })
 
-      state.value = enhancedInputValue
+      if (testedInputValue.isCorrect) {
+        state.value = newInputValue
 
-      const preResult = calcTime(enhancedInputValue)
-      state.preResult = typeof preResult === 'string' ? preResult : ''
+        const preResult = calcTime(newInputValue)
 
-      state.cursorPosition += 1
+        if (typeof preResult === 'string') {
+          state.preResult = preResult
+          state.error = null
+        } else {
+          state.preResult = ''
+          state.error = preResult.error
+        }
+
+        state.valueToRender = newInputValue
+
+        state.cursorPosition = newCursorPosition
+      } else if (testedInputValue.valueToRender) {
+        state.value = newInputValue
+
+        state.error = testedInputValue.error
+        state.valueToRender = testedInputValue.valueToRender
+
+        state.preResult = null
+        state.cursorPosition = newCursorPosition
+      }
     },
 
-    // todo: add enhancers CHAR-38
-    // ageneralKeyPressed: (state, action: PayloadAction<GeneralKey>) => {
-    //   const keyValue = action.payload
-    //   let newInputValue
-    //   let preResult = null
-
-    //   if (
-    //     // if keyValue is operator(except minus) and current expression is empty string or minus return current exp
-    //     (keyValue !== OperatorKeys.Minus &&
-    //       keyValue in OperatorKeys &&
-    //       (state.value === '' || state.value === OperatorKeys.Minus)) ||
-    //     // if latest two characters are operators and keyValue is operator return current value (e.g. 1234*-)
-    //     (state.value.length >= 3 &&
-    //       state.value.slice(-2).match(new RegExp(`[${ALL_OPERATORS}]{2}`)) &&
-    //       keyValue in OperatorKeys)
-    //   ) {
-    //     newInputValue = state.value
-    //   } else if (
-    //     // if both new key and current symbol are operators (except minus), use new
-    //     keyValue in OperatorKeys &&
-    //     ALL_OPERATORS.includes(state.value.slice(-1)) &&
-    //     // if latest operator is not a minus
-    //     !(state.value.slice(-1) !== MINUS && keyValue === MINUS)
-    //   ) {
-    //     newInputValue = state.value.slice(0, -1) + keyValue
-    //   } else {
-    //     newInputValue = state.value + keyValue
-    //   }
-
-    //   // not just if(!preResult) since it can be empty string
-    //   if (preResult === null) {
-    //     const expResult = calcTime(newInputValue)
-    //     if (typeof expResult === 'object' && expResult.error) {
-    //       preResult = ''
-    //     } else if (typeof expResult === 'string') {
-    //       preResult = expResult
-    //     }
-    //   }
-
-    //   state.value = newInputValue
-    //   state.preResult = preResult
-    // },
-
+    // todo: CHAR-61, add calculated flag
     equalsKeyPressed: (state) => {
-      const expResult = calcTime(state.value)
+      if (state.preResult && !state.error) {
+        state.value = state.preResult
+        state.valueToRender = state.value
+        state.preResult = null
 
-      if (typeof expResult === 'object') {
-        state.preResult = expResult.error
+        state.cursorPosition = state.value.length
       } else {
-        state.value = expResult
-        state.preResult = ''
+        if (state.valueToRender) state.value = state.valueToRender
+        state.preResult = state.error
       }
     },
 
-    deleteKeyPressed: (state) => {
-      if (state.cursorPosition !== 0) {
-        state.value =
-          state.value.slice(0, state.cursorPosition - 1) +
-          state.value.slice(state.cursorPosition)
-
-        state.cursorPosition -= 1
-      } else {
-        state.value = state.value.slice(1)
-      }
-
-      state.preResult = enhanceInputValue(state.value)
-    },
-
-    clearAllKeyPressed: (state) => {
-      state.value = ''
-      state.preResult = ''
-      state.cursorPosition = 0
-    },
+    clearAllKeyPressed: () => ({ ...initialState }),
 
     cursorPositionChanged: (state, action: PayloadAction<number>) => {
       state.cursorPosition = action.payload
@@ -148,9 +129,8 @@ export const mainInputSlice = createSlice({
 })
 
 export const {
-  generalKeyPressed,
+  generalOrDelKeyPressed,
   equalsKeyPressed,
-  deleteKeyPressed,
   clearAllKeyPressed,
   cursorPositionChanged,
 } = mainInputSlice.actions

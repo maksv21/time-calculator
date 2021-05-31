@@ -1,5 +1,6 @@
-import { FC, useRef } from 'react'
+import { useRef } from 'react'
 
+import type { FC } from 'react'
 import useStyles from './styles'
 import type { CursorElement, InputElement, InputValue } from './types'
 import useCursor from './utils/useCursor'
