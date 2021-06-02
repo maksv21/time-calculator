@@ -124,6 +124,7 @@ export const mainInputSlice = createSlice({
 
     cursorPositionChanged: (state, action: PayloadAction<number>) => {
       state.cursorPosition = action.payload
+      console.log(state.cursorPosition, action)
     },
   },
 })

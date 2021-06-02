@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import type { FC } from 'react'
 import useStyles from './styles'
 import type { CursorElement, InputElement, InputValue } from './types'
+import type { CursorPositionChangeHandler } from './utils/useCursor'
 import useCursor from './utils/useCursor'
 
 import useDynamicFontSize from './utils/useDynamicFontSize'
@@ -11,11 +12,18 @@ import useMouseWheelScroll from './utils/useMouseWheelScroll'
 interface Props {
   value?: InputValue
   cursorPosition?: number
+  onCursorPositionChange?: CursorPositionChangeHandler
   fontSize?: number // rem
   minFontSize?: number // rem
 }
 
-const CustomInput: FC<Props> = ({ value, fontSize = 1.6, minFontSize }) => {
+const CustomInput: FC<Props> = ({
+  value,
+  fontSize = 1.6,
+  minFontSize,
+  cursorPosition,
+  onCursorPositionChange,
+}) => {
   const inputRef = useRef<InputElement>(null)
   const cursorRef = useRef<CursorElement>(null)
 
@@ -27,7 +35,13 @@ const CustomInput: FC<Props> = ({ value, fontSize = 1.6, minFontSize }) => {
   })
 
   useMouseWheelScroll(inputRef.current)
-  useCursor({ cursorElem: cursorRef.current, inputValue: value })
+  useCursor({
+    cursorElem: cursorRef.current,
+    inputValue: value,
+    inputElem: inputRef.current,
+    cursorPosition,
+    onCursorPositionChange,
+  })
 
   const classes = useStyles({ fontSize: currentFontSize })
 
