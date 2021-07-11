@@ -1,10 +1,18 @@
 import type { TextTester } from './testers'
 import { limitMaxNumber } from './testers'
 
-export enum ERROR_TAGS {
-  critical = '$',
-  nonCritical = '#',
+const ERROR_TAGS = {
+  critical: '$',
+  nonCritical: '#',
 }
+
+export enum TypesOfRenderValue {
+  value,
+  error,
+  warning,
+}
+
+export type ValueToRenderType = { value: string; type: TypesOfRenderValue }[]
 
 interface TextTestersRunner {
   (props: { prevValue: string; newValue: string; isTestModeStrict: boolean }):
@@ -13,48 +21,89 @@ interface TextTestersRunner {
       }
     | {
         isCorrect: false
-        error: string
-        valueToRender?: string
+        error?: string
+        valueToRender?: ValueToRenderType
       }
 }
 
 const ALL_TESTERS: TextTester[] = [limitMaxNumber]
+
+const findErrors = (stringToTest: string) =>
+  ALL_TESTERS.reduce(
+    (
+      resultObj: {
+        valueWithErrors: string
+        criticalErrorsCount: number
+        firstFoundError: null | string
+      },
+      tester
+    ) => {
+      const errorTag = tester.isCritical
+        ? ERROR_TAGS.critical
+        : ERROR_TAGS.nonCritical
+
+      resultObj.valueWithErrors = resultObj.valueWithErrors.replace(
+        tester.regExp,
+        (matchedValue) => {
+          if (tester.isCritical) resultObj.criticalErrorsCount += 1
+          resultObj.firstFoundError =
+            resultObj.firstFoundError || tester.errorText
+
+          return errorTag + matchedValue + errorTag
+        }
+      )
+
+      return resultObj
+    },
+    {
+      valueWithErrors: stringToTest,
+      criticalErrorsCount: 0,
+      firstFoundError: null,
+    }
+  )
 
 const runTextTesters: TextTestersRunner = ({
   prevValue,
   newValue,
   isTestModeStrict,
 }) => {
-  const foundError: TextTester | undefined = ALL_TESTERS.find(
-    ({ regExp }: TextTester) => newValue.match(regExp)
-  )
+  const { valueWithErrors, criticalErrorsCount, firstFoundError } =
+    findErrors(newValue)
 
-  if (!foundError) {
+  if (!firstFoundError) {
     return { isCorrect: true }
   }
 
-  const errorsInPrevValue = prevValue.match(foundError.regExp)
-  const errorInNewValue = newValue.match(foundError.regExp)
+  const { criticalErrorsCount: criticalErrorsInPrevValue } =
+    findErrors(prevValue)
 
-  if (
-    foundError.isCritical &&
-    isTestModeStrict &&
-    (!errorsInPrevValue ||
-      !errorInNewValue ||
-      errorInNewValue.length <= errorsInPrevValue.length)
-  ) {
-    return { isCorrect: false, error: foundError.errorText }
+  if (isTestModeStrict && criticalErrorsCount > criticalErrorsInPrevValue) {
+    return { isCorrect: false }
   }
 
-  const errorTag = foundError.isCritical
-    ? ERROR_TAGS.critical
-    : ERROR_TAGS.nonCritical
-  const valueToRender = newValue.replaceAll(
-    foundError.regExp,
-    (matchedValue) => errorTag + matchedValue + errorTag
-  )
+  const valueToRender: ValueToRenderType =
+    valueWithErrors.match(/(\$[^$]+\$)|(#[^#]+#)|[^#$]+/g)?.map((matched) => {
+      if (matched[0] === ERROR_TAGS.critical) {
+        return {
+          value: matched.slice(1, -1),
+          type: TypesOfRenderValue.error,
+        }
+      }
 
-  return { isCorrect: false, error: foundError.errorText, valueToRender }
+      if (matched[0] === ERROR_TAGS.nonCritical) {
+        return {
+          value: matched.slice(1, -1),
+          type: TypesOfRenderValue.warning,
+        }
+      }
+
+      return {
+        value: matched,
+        type: TypesOfRenderValue.value,
+      }
+    }) || []
+
+  return { isCorrect: false, error: firstFoundError, valueToRender }
 }
 
 export default runTextTesters

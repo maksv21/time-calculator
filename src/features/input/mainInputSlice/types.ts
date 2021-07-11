@@ -1,7 +1,9 @@
+import type { ValueToRenderType } from './utils/textTesters/runTextTesters'
+
 export interface MainInputState {
   value: string
   // equal the value or the modified value with styles, such as highlighted errors
-  valueToRender: string | null
+  valueToRender: ValueToRenderType | string | null
   preResult: null | string
   error: string | null
   cursorPosition: number

@@ -2,7 +2,9 @@
 
 import { FONT_FAMILY } from 'app/theme'
 
-const getTextWidth = (elem: HTMLParagraphElement): number | null => {
+const getTextWidth = (
+  elem: HTMLParagraphElement | HTMLSpanElement
+): number | null => {
   const { textContent } = elem
 
   const canvas = document.createElement('canvas')

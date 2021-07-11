@@ -98,7 +98,7 @@ export const mainInputSlice = createSlice({
       } else if (testedInputValue.valueToRender) {
         state.value = newInputValue
 
-        state.error = testedInputValue.error
+        if (testedInputValue.error) state.error = testedInputValue.error
         state.valueToRender = testedInputValue.valueToRender
 
         state.preResult = null
@@ -115,7 +115,6 @@ export const mainInputSlice = createSlice({
 
         state.cursorPosition = state.value.length
       } else {
-        if (state.valueToRender) state.value = state.valueToRender
         state.preResult = state.error
       }
     },
@@ -124,7 +123,6 @@ export const mainInputSlice = createSlice({
 
     cursorPositionChanged: (state, action: PayloadAction<number>) => {
       state.cursorPosition = action.payload
-      console.log(state.cursorPosition, action)
     },
   },
 })

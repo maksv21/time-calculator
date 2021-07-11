@@ -21,9 +21,24 @@ const PreResult = styled.div`
 `
 
 export default () => {
-  const { valueToRender: inputValue, preResult } = useSelector(
-    (s) => s.mainInput
-  )
+  const { valueToRender, preResult } = useSelector((s) => s.mainInput)
+
+  let inputValue
+
+  if (valueToRender && typeof valueToRender === 'object') {
+    inputValue = valueToRender.map((valueObj) => {
+      if (valueObj.type === 0) {
+        return valueObj.value
+      }
+      if (valueObj === 1) {
+        return <span style={{ color: 'red' }}>{valueObj.value}</span>
+      }
+
+      return <span style={{ color: 'orange' }}>{valueObj.value}</span>
+    })
+  } else {
+    inputValue = valueToRender || ''
+  }
 
   const cursorPosition = useSelector((state) => state.mainInput.cursorPosition)
 
@@ -39,6 +54,7 @@ export default () => {
     <InputContainer>
       <CustomInput
         value={inputValue}
+        onInput={(newValue) => console.log(newValue)}
         fontSize={5.5}
         minFontSize={3.5}
         cursorPosition={cursorPosition}

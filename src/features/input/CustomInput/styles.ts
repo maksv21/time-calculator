@@ -10,36 +10,23 @@ const inputPadding = '25px'
 
 const useStyles = makeStyles<Theme, Props>((theme) => ({
   root: {
-    transition: 'padding 0.1s',
-  },
-  padding: {
-    width: inputPadding,
-    display: 'inline-block',
-  },
-  input: {
+    position: 'relative',
+    display: 'flex',
     overflow: 'auto',
-    transition: 'all 0.1s',
-    whiteSpace: 'nowrap',
-    fontSize: (props) => `${props.fontSize}rem`,
-
     /* Hide scrollbar for Chromium browsers */
     '&::-webkit-scrollbar': {
       display: 'none',
     },
     /* Hide scrollbar for Firefox */
-    'scrollbar-width': 'none' /* Firefox */,
-
-    // for cursor
-    position: 'relative',
+    'scrollbar-width': 'none',
   },
-  cursor: {
-    background: theme.palette.primary.contrastText,
-    width: '.2rem',
-    height: (props) => `${props.fontSize + 0.5}rem`,
-    position: 'absolute',
-    display: 'inline-block',
-    right: 0,
-    marginRight: `${parseInt(inputPadding, 10) - 2}px`, // indent the cursor a bit to the right
+  input: {
+    whiteSpace: 'nowrap',
+    fontSize: (props) => `${props.fontSize}rem`,
+    marginLeft: 'auto',
+    padding: `0 ${inputPadding}`,
+    transition: 'font-size 0.1s',
+    outline: 'none',
   },
 }))
 
