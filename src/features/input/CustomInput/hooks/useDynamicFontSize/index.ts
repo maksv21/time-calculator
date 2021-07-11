@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
 import type { InputElement, InputRootElement } from '../../types'
 
 import getTextWidth from './getTextWidth'
 
 interface Props {
-  value?: string
+  value?: ReactNode
   inputElem: InputElement
   inputRootElem: InputRootElement
   fontSize: number

@@ -10,7 +10,7 @@ const calcTime = (exp: string): string | { error: string } =>
 
 const initialState: MainInputState = {
   value: '',
-  valueToRender: null,
+  valueToRender: '',
   preResult: null,
   error: null,
   cursorPosition: 0,

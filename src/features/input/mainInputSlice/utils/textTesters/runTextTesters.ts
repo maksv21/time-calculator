@@ -12,7 +12,7 @@ export enum TypesOfRenderValue {
   warning,
 }
 
-export type ValueToRenderType = { value: string; type: TypesOfRenderValue }[]
+export type ValueWithErrors = { value: string; type: TypesOfRenderValue }[]
 
 interface TextTestersRunner {
   (props: { prevValue: string; newValue: string; isTestModeStrict: boolean }):
@@ -22,7 +22,7 @@ interface TextTestersRunner {
     | {
         isCorrect: false
         error?: string
-        valueToRender?: ValueToRenderType
+        valueToRender?: ValueWithErrors
       }
 }
 
@@ -81,7 +81,7 @@ const runTextTesters: TextTestersRunner = ({
     return { isCorrect: false }
   }
 
-  const valueToRender: ValueToRenderType =
+  const valueToRender: ValueWithErrors =
     valueWithErrors.match(/(\$[^$]+\$)|(#[^#]+#)|[^#$]+/g)?.map((matched) => {
       if (matched[0] === ERROR_TAGS.critical) {
         return {

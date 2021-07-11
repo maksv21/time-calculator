@@ -28,13 +28,21 @@ export default () => {
   if (valueToRender && typeof valueToRender === 'object') {
     inputValue = valueToRender.map((valueObj) => {
       if (valueObj.type === 0) {
-        return valueObj.value
+        return <span key={valueObj.value}>{valueObj.value}</span>
       }
       if (valueObj === 1) {
-        return <span style={{ color: 'red' }}>{valueObj.value}</span>
+        return (
+          <span key={valueObj.value} style={{ color: 'red' }}>
+            {valueObj.value}
+          </span>
+        )
       }
 
-      return <span style={{ color: 'orange' }}>{valueObj.value}</span>
+      return (
+        <span key={valueObj.value} style={{ color: 'orange' }}>
+          {valueObj.value}
+        </span>
+      )
     })
   } else {
     inputValue = valueToRender || ''
@@ -54,10 +62,15 @@ export default () => {
     <InputContainer>
       <CustomInput
         value={inputValue}
+        arrayOfElements={
+          valueToRender && typeof valueToRender === 'object'
+            ? valueToRender
+            : null
+        }
         onInput={(newValue) => console.log(newValue)}
         fontSize={5.5}
         minFontSize={3.5}
-        cursorPosition={cursorPosition}
+        caretPosition={cursorPosition}
         onCursorPositionChange={handleCursorPositionChange}
       />
       <PreResult>{preResult}</PreResult>

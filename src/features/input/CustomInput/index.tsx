@@ -1,50 +1,46 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
+import ReactDOMServer from 'react-dom/server'
 
-import type { FC } from 'react'
+import type { FC, ChangeEvent, ReactNode } from 'react'
 import useStyles from './styles'
 import type {
   InputElement,
-  InputValue,
-  CursorPositionChangeHandler,
+  CaretPositionChangeHandler,
   InputRootElement,
 } from './types'
 
 import useDynamicFontSize from './hooks/useDynamicFontSize'
 import useMouseWheelScroll from './hooks/useMouseWheelScroll'
+import useCaretPosition from './hooks/useCaretPosition'
+import type { ValueWithErrors } from '../mainInputSlice/utils/textTesters/runTextTesters'
+import { OperatorKeys } from '../mainInputSlice/types'
 
 interface Props {
-  value: InputValue
+  value: ReactNode
+  arrayOfElements: ValueWithErrors | null
   onInput: (newInputValue: string) => void
-  cursorPosition: number
-  onCursorPositionChange?: CursorPositionChangeHandler
+  caretPosition: number
+  onCaretPositionChange: CaretPositionChangeHandler
   fontSize?: number // rem
   minFontSize?: number // rem
 }
 
-const setCursorPosition = (node: InputElement, cursorPosition: number) => {
-  if (!node) return
-  node.focus({ preventScroll: true })
-  const textNode = node.firstChild
-  console.log(node, textNode, node.firstChild)
-  if (!textNode) return
-
-  const caret = 10 // insert caret after the 10th character say
-  const range = document.createRange()
-  range.setStart(textNode, caret)
-  range.setEnd(textNode, caret)
-  const sel = window.getSelection()
-  sel?.removeAllRanges()
-  sel?.addRange(range)
-}
-
 const CustomInput: FC<Props> = ({
   value,
+  arrayOfElements,
   onInput,
   fontSize = 1.6,
   minFontSize,
-  cursorPosition,
-  onCursorPositionChange,
+  caretPosition,
+  onCaretPositionChange,
 }) => {
+  const [random, setRandom] = useState(1)
   const [isInputFocused, setIsInputFocused] = useState(true)
 
   const rootRef = useRef<InputRootElement>(null)
@@ -59,6 +55,18 @@ const CustomInput: FC<Props> = ({
   })
 
   useMouseWheelScroll(rootRef.current)
+
+  const setCaretPosition = useCaretPosition({
+    caretPosition,
+    onCaretPositionChange,
+    inputElem: inputRef.current,
+    arrayOfElements,
+  })
+
+  useLayoutEffect(
+    () => setCaretPosition(caretPosition),
+    [caretPosition, setCaretPosition]
+  )
 
   const classes = useStyles({ fontSize: currentFontSize })
 
@@ -87,22 +95,21 @@ const CustomInput: FC<Props> = ({
 
   useEffect(() => inputRef.current?.focus(), [])
 
-  /* const handleInput = useCallback(
+  const handleInput = useCallback(
     (event: ChangeEvent<HTMLDivElement>) => {
-      event.target.innerText = value || ''
+      const newInputValue =
+        event.target.textContent
+          ?.replace('/', OperatorKeys.Div)
+          .replace('*', OperatorKeys.Mult) || ''
 
-      const newValue = (event.nativeEvent as InputEvent).data || ''
-      onInput(newValue)
+      onInput(newInputValue)
+
+      event.target.innerHTML = ReactDOMServer.renderToStaticMarkup(<>{value}</>)
+      setCaretPosition(caretPosition)
     },
 
-    [onInput]
-  ) */
-
-  /* useEffect(() => {
-    if (!inputRef.current) return
-
-    inputRef.current.innerHTML = value
-  }, [value]) */
+    [caretPosition, onInput, setCaretPosition, value]
+  )
 
   return (
     <div className={classes.root} ref={rootRef}>
@@ -111,10 +118,12 @@ const CustomInput: FC<Props> = ({
         ref={inputRef}
         contentEditable
         onBlur={handleBlur}
-        // onInput={handleInput}
-      >
-        {value}
-      </div>
+        onInput={handleInput}
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: ReactDOMServer.renderToStaticMarkup(<>{value}</>),
+        }}
+      />
     </div>
   )
 }

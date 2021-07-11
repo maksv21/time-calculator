@@ -3,8 +3,6 @@ export type InputRootElement = HTMLDivElement | null
 export type InputElement = HTMLDivElement | null
 export type CursorElement = HTMLDivElement | null
 
-export type InputValue = string
-
-export interface CursorPositionChangeHandler {
+export interface CaretPositionChangeHandler {
   (newPosition: number): void
 }
