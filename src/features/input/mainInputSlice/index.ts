@@ -1,12 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import calcTimeNoType from './utils/calcTime'
+import calculateTime from './utils/calculateTime'
 import runTextTesters from './utils/textTesters/runTextTesters'
 import type { GeneralKey, HandleKeyPressFunc, MainInputState } from './types'
 import { DEL_KEY } from './types'
-
-const calcTime = (exp: string): string | { error: string } =>
-  calcTimeNoType(exp)
 
 const initialState: MainInputState = {
   value: '',
@@ -82,10 +79,10 @@ export const mainInputSlice = createSlice({
       if (testedInputValue.isCorrect) {
         state.value = newInputValue
 
-        const preResult = calcTime(newInputValue)
+        const preResult = calculateTime(newInputValue)
 
-        if (typeof preResult === 'string') {
-          state.preResult = preResult
+        if (preResult.isCorrect) {
+          state.preResult = preResult.value
           state.error = null
         } else {
           state.preResult = ''
