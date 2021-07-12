@@ -83,17 +83,22 @@ const runTextTesters: TextTestersRunner = ({
 
   const valueToRender: ValueWithErrors =
     valueWithErrors.match(/(\$[^$]+\$)|(#[^#]+#)|[^#$]+/g)?.map((matched) => {
-      if (matched[0] === ERROR_TAGS.critical) {
+      if (
+        matched[0] === ERROR_TAGS.critical ||
+        matched[0] === ERROR_TAGS.nonCritical
+      ) {
         return {
-          value: matched.slice(1, -1),
-          type: TypesOfRenderValue.error,
-        }
-      }
-
-      if (matched[0] === ERROR_TAGS.nonCritical) {
-        return {
-          value: matched.slice(1, -1),
-          type: TypesOfRenderValue.warning,
+          value: matched.replace(
+            new RegExp(
+              `[${ERROR_TAGS.critical + ERROR_TAGS.nonCritical}]`,
+              'g'
+            ),
+            ''
+          ),
+          type:
+            matched[0] === ERROR_TAGS.critical
+              ? TypesOfRenderValue.error
+              : TypesOfRenderValue.warning,
         }
       }
 

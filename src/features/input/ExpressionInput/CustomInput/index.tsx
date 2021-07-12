@@ -18,8 +18,8 @@ import type {
 import useDynamicFontSize from './hooks/useDynamicFontSize'
 import useMouseWheelScroll from './hooks/useMouseWheelScroll'
 import useCaretPosition from './hooks/useCaretPosition'
-import type { ValueWithErrors } from '../mainInputSlice/utils/textTesters/runTextTesters'
-import { OperatorKeys } from '../mainInputSlice/types'
+import type { ValueWithErrors } from '../../mainInputSlice/utils/textTesters/runTextTesters'
+import { OperatorKeys } from '../../mainInputSlice/types'
 
 interface Props {
   value: ReactNode
