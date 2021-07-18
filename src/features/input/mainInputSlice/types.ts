@@ -1,6 +1,6 @@
 import type { ValueWithErrors } from './utils/textTesters/runTextTesters'
 
-export type ValueToRender = ValueWithErrors | string
+export type ValueToRender = ValueWithErrors | string | null
 
 export interface MainInputState {
   value: string

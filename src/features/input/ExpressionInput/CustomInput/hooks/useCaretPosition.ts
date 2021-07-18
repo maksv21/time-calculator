@@ -1,68 +1,50 @@
-import { useCallback } from 'react'
-import type { InputElement } from '../types'
-import type { ValueWithErrors } from 'features/input/mainInputSlice/utils/textTesters/runTextTesters'
+import { useCallback, useEffect } from 'react'
+import type { CaretElement, InputElement } from '../types'
 
 interface Props {
-  caretPosition: number
+  caretElem: CaretElement
   onCaretPositionChange: (newPosition: number) => void
   inputElem: InputElement
-  arrayOfElements: ValueWithErrors | null
-}
-
-interface SetCaretPosition {
-  (caretPosition: number): void
 }
 
 const useCaretPosition = ({
-  caretPosition,
   onCaretPositionChange,
+  caretElem,
   inputElem,
-  arrayOfElements,
-}: Props): SetCaretPosition => {
-  const setCaretPosition = useCallback(() => {
-    if (!inputElem) return
-
-    const { targetNode, targetOffset } = (() => {
-      if (!arrayOfElements) {
-        return {
-          targetNode: inputElem.firstChild,
-          targetOffset: caretPosition,
-        }
-      }
-
-      let lengthOfPrevElements = 0
-      let offset = 0
-
-      const targetIndex = arrayOfElements.findIndex((elem) => {
-        if (lengthOfPrevElements + elem.value.length >= caretPosition) {
-          offset = caretPosition - lengthOfPrevElements
-          return true
-        }
-
-        lengthOfPrevElements += elem.value.length
-        return false
-      })
-
-      return {
-        targetNode:
-          inputElem.children[targetIndex !== -1 ? targetIndex : 0].firstChild,
-        targetOffset: offset,
-      }
-    })()
-
-    if (!targetNode) return
-
-    const range = document.createRange()
+}: Props): void => {
+  const handleCaretPositionChange = useCallback(() => {
     const selection = window.getSelection()
+    if (!selection || selection.anchorNode === caretElem) return
 
-    range.setStart(targetNode, targetOffset)
-    range.collapse(true)
+    if (selection.type === 'Caret') {
+      const selectedElement = selection.anchorNode?.parentElement
 
-    selection?.removeAllRanges()
-    selection?.addRange(range)
-  }, [arrayOfElements, caretPosition, inputElem])
+      let offset = 0
+      // value with error or just string, last children is caret
+      if (inputElem?.children && inputElem.children.length > 1) {
+        ;[...inputElem?.children].find((element) => {
+          if (element !== selectedElement) {
+            offset += element.textContent?.length || 0
+            return false
+          }
 
-  return setCaretPosition
+          offset += selection.anchorOffset
+          return true
+        })
+      } else {
+        offset = selection.anchorOffset
+      }
+
+      onCaretPositionChange(offset)
+    }
+  }, [caretElem, inputElem?.children, onCaretPositionChange])
+
+  useEffect(() => {
+    document.addEventListener('selectionchange', handleCaretPositionChange)
+    return () => {
+      document.removeEventListener('selectionchange', handleCaretPositionChange)
+    }
+  }, [handleCaretPositionChange])
 }
 
 export default useCaretPosition

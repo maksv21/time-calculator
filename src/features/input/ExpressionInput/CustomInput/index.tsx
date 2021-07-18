@@ -1,29 +1,25 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
-import ReactDOMServer from 'react-dom/server'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
-import type { FC, ChangeEvent, ReactNode } from 'react'
 import useStyles from './styles'
+import type { FC, ChangeEvent } from 'react'
 import type {
   InputElement,
   CaretPositionChangeHandler,
   InputRootElement,
+  CaretElement,
+  InputValue,
 } from './types'
 
-import useDynamicFontSize from './hooks/useDynamicFontSize'
 import useMouseWheelScroll from './hooks/useMouseWheelScroll'
 import useCaretPosition from './hooks/useCaretPosition'
-import type { ValueWithErrors } from '../../mainInputSlice/utils/textTesters/runTextTesters'
 import { OperatorKeys } from '../../mainInputSlice/types'
+import useCaretAnimation from './hooks/useCaretAnimation'
+import useDynamicFontSize from './hooks/useDynamicFontSize'
+import useCaretMargin from './hooks/useCaretMargin'
 
 interface Props {
-  value: ReactNode
-  arrayOfElements: ValueWithErrors | null
+  value: InputValue
+  valueOneString: string | null
   onInput: (newInputValue: string) => void
   caretPosition: number
   onCaretPositionChange: CaretPositionChangeHandler
@@ -33,18 +29,20 @@ interface Props {
 
 const CustomInput: FC<Props> = ({
   value,
-  arrayOfElements,
+  valueOneString,
   onInput,
   fontSize = 1.6,
   minFontSize,
   caretPosition,
   onCaretPositionChange,
 }) => {
-  const [random, setRandom] = useState(1)
   const [isInputFocused, setIsInputFocused] = useState(true)
 
   const rootRef = useRef<InputRootElement>(null)
   const inputRef = useRef<InputElement>(null)
+
+  const caretRef = useRef<CaretElement>(null)
+  const inputForCalculationRef = useRef<InputElement>(null)
 
   const currentFontSize = useDynamicFontSize({
     value,
@@ -54,42 +52,17 @@ const CustomInput: FC<Props> = ({
     minFontSize,
   })
 
-  useMouseWheelScroll(rootRef.current)
-
-  const setCaretPosition = useCaretPosition({
-    caretPosition,
-    onCaretPositionChange,
-    inputElem: inputRef.current,
-    arrayOfElements,
-  })
-
-  useLayoutEffect(
-    () => setCaretPosition(caretPosition),
-    [caretPosition, setCaretPosition]
-  )
-
   const classes = useStyles({ fontSize: currentFontSize })
 
+  useMouseWheelScroll(rootRef.current)
+
+  useCaretPosition({
+    caretElem: caretRef.current,
+    onCaretPositionChange,
+    inputElem: inputRef.current,
+  })
+
   const handleBlur = useCallback(() => {
-    // function setCaret() {
-    //   const range = document.createRange()
-    //   const sel = window.getSelection()
-    //   const textNode = inputRef.current?.firstChild
-    //   if (!textNode) return
-
-    //   console.log(cursorPosition)
-
-    //   range.setStart(textNode, cursorPosition || 0)
-    //   range.collapse(true)
-
-    //   sel?.removeAllRanges()
-    //   sel?.addRange(range)
-    // }
-
-    // setCaret()
-
-    // if (isInputFocused) setCursorPosition(inputRef.current, cursorPosition)
-
     if (isInputFocused) inputRef.current?.focus({ preventScroll: true })
   }, [isInputFocused])
 
@@ -103,28 +76,41 @@ const CustomInput: FC<Props> = ({
           .replace('*', OperatorKeys.Mult) || ''
 
       onInput(newInputValue)
-
-      event.target.innerHTML = ReactDOMServer.renderToStaticMarkup(<>{value}</>)
-      setCaretPosition(caretPosition)
     },
 
-    [caretPosition, onInput, setCaretPosition, value]
+    [onInput]
+  )
+
+  useCaretAnimation({
+    caretElem: caretRef.current,
+    caretPosition,
+    valueOneString,
+    isCursorVisible: true,
+    blinkingAnimationClass: classes.blinkingAnimation,
+  })
+
+  const caretMargin = useCaretMargin(
+    inputForCalculationRef.current,
+    valueOneString,
+    caretPosition
   )
 
   return (
-    <div className={classes.root} ref={rootRef}>
-      <div
-        className={classes.input}
-        ref={inputRef}
-        contentEditable
-        onBlur={handleBlur}
-        onInput={handleInput}
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html: ReactDOMServer.renderToStaticMarkup(<>{value}</>),
-        }}
-      />
-    </div>
+    <>
+      <div className={classes.inputForCalculation} ref={inputForCalculationRef}>
+        {valueOneString}
+      </div>
+      <div className={classes.root} ref={rootRef}>
+        <div className={classes.input} ref={inputRef} onBlur={handleBlur}>
+          {value}
+          <span
+            className={classes.caret}
+            ref={caretRef}
+            style={{ right: caretMargin }}
+          />
+        </div>
+      </div>
+    </>
   )
 }
 
