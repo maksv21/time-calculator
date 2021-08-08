@@ -14,7 +14,12 @@ const useCaretPosition = ({
 }: Props): void => {
   const handleCaretPositionChange = useCallback(() => {
     const selection = window.getSelection()
-    if (!selection || selection.anchorNode === caretElem) return
+    if (
+      !selection ||
+      selection.anchorNode === caretElem ||
+      !inputElem?.contains(selection.anchorNode)
+    )
+      return
 
     if (selection.type === 'Caret') {
       const selectedElement = selection.anchorNode?.parentElement
@@ -37,7 +42,7 @@ const useCaretPosition = ({
 
       onCaretPositionChange(offset)
     }
-  }, [caretElem, inputElem?.children, onCaretPositionChange])
+  }, [caretElem, inputElem, onCaretPositionChange])
 
   useEffect(() => {
     document.addEventListener('selectionchange', handleCaretPositionChange)
