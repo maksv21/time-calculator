@@ -1,5 +1,4 @@
-import type { TextTester } from './testers'
-import { noDivideByZero, noTwoOperators, limitMaxNumber } from './testers'
+import { testersArr } from './testers'
 
 const ERROR_TAGS = {
   critical: '$',
@@ -26,12 +25,6 @@ interface TextTestersRunner {
       }
 }
 
-const ALL_TESTERS: TextTester[] = [
-  limitMaxNumber,
-  noTwoOperators,
-  noDivideByZero,
-]
-
 const matchError = (
   value: string,
   regExp: RegExp,
@@ -54,7 +47,7 @@ const matchError = (
 }
 
 const findErrors = (stringToTest: string) =>
-  ALL_TESTERS.reduce(
+  testersArr.reduce(
     (
       resultObj: {
         valueWithErrors: string
