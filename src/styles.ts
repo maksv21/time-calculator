@@ -20,6 +20,8 @@ const useStyles = makeStyles(() => ({
     maxWidth: '900px',
     margin: '0 auto',
   },
+
+  caret: {},
 }))
 
 export default useStyles

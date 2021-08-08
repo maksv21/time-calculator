@@ -1,12 +1,13 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import CustomInput from 'features/input/ExpressionInput/CustomInput'
 import { cursorPositionChanged } from 'features/input/mainInputSlice'
 import { useAppDispatch, useAppSelector } from 'app/hooks'
-import { TypesOfRenderValue } from 'features/input/mainInputSlice/utils/textTesters/runTextTesters'
 import useStyles from './styles'
 
 import type { FC } from 'react'
+import { TypesOfRenderValue } from '../mainInputSlice/utils/textTesters/runTextTesters'
+import type { InputValue } from './CustomInput/types'
 
 const ExpressionInput: FC = () => {
   const styles = useStyles()
@@ -15,43 +16,58 @@ const ExpressionInput: FC = () => {
     (state) => state.mainInput
   )
 
-  const inputValue =
-    valueToRender && typeof valueToRender === 'object'
-      ? valueToRender.map((valueObj) => {
-          if (valueObj.type === TypesOfRenderValue.value) {
-            return <span key={valueObj.value}>{valueObj.value}</span>
-          }
-          return (
-            <span
-              key={valueObj.value}
-              style={{
-                color:
-                  valueObj.type === TypesOfRenderValue.error ? 'red' : 'orange',
-              }}
-            >
-              {valueObj.value}
-            </span>
-          )
-        })
-      : valueToRender || ''
-
   const dispatch = useAppDispatch()
   const handleCursorPositionChange = useCallback(
-    (newCursorPosition) => {
-      dispatch(cursorPositionChanged(newCursorPosition))
-    },
+    (newCursorPosition) => dispatch(cursorPositionChanged(newCursorPosition)),
     [dispatch]
   )
+
+  const inputValue: InputValue = useMemo(() => {
+    if (typeof valueToRender === 'string') return valueToRender
+
+    let lengthOfPrevElements: null | number = 0
+
+    return (
+      valueToRender &&
+      valueToRender.flatMap((valueObj) => {
+        const elementValue = valueObj.value
+        lengthOfPrevElements =
+          lengthOfPrevElements !== null
+            ? lengthOfPrevElements + valueObj.value.length
+            : null
+
+        return valueObj.type === TypesOfRenderValue.value ? (
+          // make key unique on each rendering
+          <span key={valueObj.value + Date.now()}>{elementValue}</span>
+        ) : (
+          <span
+            key={valueObj.value + Date.now()}
+            style={{
+              color:
+                valueObj.type === TypesOfRenderValue.error ? 'red' : 'orange',
+            }}
+          >
+            {elementValue}
+          </span>
+        )
+      })
+    )
+  }, [valueToRender])
+
+  const inputValueOneString =
+    typeof valueToRender === 'string'
+      ? valueToRender
+      : valueToRender &&
+        valueToRender.reduce(
+          (prevValue, valueObj) => prevValue + valueObj.value,
+          ''
+        )
 
   return (
     <div className={styles.root}>
       <CustomInput
         value={inputValue}
-        arrayOfElements={
-          valueToRender && typeof valueToRender === 'object'
-            ? valueToRender
-            : null
-        }
+        valueOneString={inputValueOneString}
         onInput={(newValue) => console.log(newValue)}
         fontSize={5.5}
         minFontSize={3.5}

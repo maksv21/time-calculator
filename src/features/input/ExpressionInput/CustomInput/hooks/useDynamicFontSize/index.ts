@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
-import type { InputElement, InputRootElement } from '../../types'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { InputElement, InputRootElement, InputValue } from '../../types'
 
 import getTextWidth from './getTextWidth'
 
 interface Props {
-  value?: ReactNode
+  value: InputValue
   inputElem: InputElement
   inputRootElem: InputRootElement
   fontSize: number
@@ -21,8 +20,12 @@ const useDynamicFontSize = ({
 }: Props): number => {
   const [currentFontSize, setCurrentFontSize] = useState(fontSize)
 
-  useEffect(() => {
-    if (!inputRootElem || !inputElem || !minFontSize) return
+  // to not rerun useEffect on setCurrentFontSize call
+  const fontSizeRef = useRef(currentFontSize)
+  fontSizeRef.current = currentFontSize
+
+  const handleFontSizeUpdate = useCallback(() => {
+    if (!inputRootElem || !inputElem || !minFontSize || !value) return
     const inputRootWidth = inputRootElem.clientWidth // without scroll
     const inputTextWidth = getTextWidth(inputElem) // with scroll
 
@@ -30,7 +33,7 @@ const useDynamicFontSize = ({
 
     const textSizeDiff = (100 / inputTextWidth) * inputRootWidth // difference in width between the text and the input
 
-    const newFontSize = (currentFontSize / 100) * textSizeDiff * 0.9 // -10% for better view
+    const newFontSize = (fontSizeRef.current / 100) * textSizeDiff * 0.9 // -10% for better view
 
     if (newFontSize > fontSize) {
       setCurrentFontSize(fontSize)
@@ -39,10 +42,15 @@ const useDynamicFontSize = ({
     } else {
       setCurrentFontSize(newFontSize)
     }
+  }, [value, fontSize, minFontSize, inputRootElem, inputElem])
 
-    // changing currentFontSize shouldn't rerun useEffect
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, fontSize, minFontSize])
+  useEffect(() => {
+    handleFontSizeUpdate()
+
+    window.addEventListener('resize', handleFontSizeUpdate)
+
+    return () => window.removeEventListener('resize', handleFontSizeUpdate)
+  }, [handleFontSizeUpdate])
 
   return currentFontSize
 }
