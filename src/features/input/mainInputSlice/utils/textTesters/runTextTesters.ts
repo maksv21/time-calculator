@@ -1,5 +1,5 @@
 import type { TextTester } from './testers'
-import { limitMaxNumber } from './testers'
+import { noTwoOperators, limitMaxNumber } from './testers'
 
 const ERROR_TAGS = {
   critical: '$',
@@ -26,7 +26,7 @@ interface TextTestersRunner {
       }
 }
 
-const ALL_TESTERS: TextTester[] = [limitMaxNumber]
+const ALL_TESTERS: TextTester[] = [limitMaxNumber, noTwoOperators]
 
 const findErrors = (stringToTest: string) =>
   ALL_TESTERS.reduce(

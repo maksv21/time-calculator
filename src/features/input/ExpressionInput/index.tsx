@@ -9,6 +9,9 @@ import type { FC } from 'react'
 import { TypesOfRenderValue } from '../mainInputSlice/utils/textTesters/runTextTesters'
 import type { InputValue } from './CustomInput/types'
 
+// it's too hard to make keys for input values, so just remake them on each render
+const makeUniqueKey = () => Date.now() + Math.random()
+
 const ExpressionInput: FC = () => {
   const styles = useStyles()
 
@@ -38,10 +41,10 @@ const ExpressionInput: FC = () => {
 
         return valueObj.type === TypesOfRenderValue.value ? (
           // make key unique on each rendering
-          <span key={valueObj.value + Date.now()}>{elementValue}</span>
+          <span key={makeUniqueKey()}>{elementValue}</span>
         ) : (
           <span
-            key={valueObj.value + Date.now()}
+            key={makeUniqueKey()}
             style={{
               color:
                 valueObj.type === TypesOfRenderValue.error ? 'red' : 'orange',
