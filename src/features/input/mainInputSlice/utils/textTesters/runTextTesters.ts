@@ -1,5 +1,5 @@
 import type { TextTester } from './testers'
-import { noTwoOperators, limitMaxNumber } from './testers'
+import { noDivideByZero, noTwoOperators, limitMaxNumber } from './testers'
 
 const ERROR_TAGS = {
   critical: '$',
@@ -26,7 +26,32 @@ interface TextTestersRunner {
       }
 }
 
-const ALL_TESTERS: TextTester[] = [limitMaxNumber, noTwoOperators]
+const ALL_TESTERS: TextTester[] = [
+  limitMaxNumber,
+  noTwoOperators,
+  noDivideByZero,
+]
+
+const matchError = (
+  value: string,
+  regExp: RegExp,
+  errorTag: string
+): string => {
+  const matchedObj = value.match(regExp)
+
+  if (!matchedObj) return ''
+
+  const matchedIndex = matchedObj.index || 0
+  const matchedValue = matchedObj[0]
+
+  return (
+    value.slice(0, matchedIndex) +
+    errorTag +
+    matchedValue +
+    errorTag +
+    value.slice(matchedIndex + matchedValue.length)
+  )
+}
 
 const findErrors = (stringToTest: string) =>
   ALL_TESTERS.reduce(
@@ -49,7 +74,9 @@ const findErrors = (stringToTest: string) =>
           resultObj.firstFoundError =
             resultObj.firstFoundError || tester.errorText
 
-          return errorTag + matchedValue + errorTag
+          return tester.match
+            ? matchError(matchedValue, tester.match, errorTag)
+            : errorTag + matchedValue + errorTag
         }
       )
 
