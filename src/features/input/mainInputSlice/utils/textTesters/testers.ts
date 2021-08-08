@@ -6,6 +6,8 @@ export interface TextTester {
   isCritical: boolean // will affect on rendering
 }
 
+const time = '(\\d+:\\d*)'
+
 export const testersArr: TextTester[] = [
   {
     regExp: /\d{11,}/g,
@@ -30,5 +32,11 @@ export const testersArr: TextTester[] = [
     regExp: /(\d*[.:]\d*){2,}/g,
     errorText: 'Two separators in one number (: or .)',
     isCritical: true,
+  },
+
+  {
+    regExp: new RegExp(`${time}[×÷]${time}`, 'g'),
+    errorText: "Can't multiply or divide time",
+    isCritical: false,
   },
 ]
