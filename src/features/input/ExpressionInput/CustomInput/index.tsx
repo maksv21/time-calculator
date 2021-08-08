@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import useStyles from './styles'
-import type { FC, ChangeEvent } from 'react'
+import type { FC } from 'react'
 import type {
   InputElement,
   CaretPositionChangeHandler,
@@ -12,7 +12,6 @@ import type {
 
 import useMouseWheelScroll from './hooks/useMouseWheelScroll'
 import useCaretPosition from './hooks/useCaretPosition'
-import { OperatorKeys } from '../../mainInputSlice/types'
 import useCaretAnimation from './hooks/useCaretAnimation'
 import useDynamicFontSize from './hooks/useDynamicFontSize'
 import useCaretMargin from './hooks/useCaretMargin'
@@ -20,7 +19,7 @@ import useCaretMargin from './hooks/useCaretMargin'
 interface Props {
   value: InputValue
   valueOneString: string | null
-  onInput: (newInputValue: string) => void
+  // onInput: (newInputValue: string) => void
   caretPosition: number
   onCaretPositionChange: CaretPositionChangeHandler
   fontSize?: number // rem
@@ -30,14 +29,11 @@ interface Props {
 const CustomInput: FC<Props> = ({
   value,
   valueOneString,
-  onInput,
   fontSize = 1.6,
   minFontSize,
   caretPosition,
   onCaretPositionChange,
 }) => {
-  const [isInputFocused, setIsInputFocused] = useState(true)
-
   const rootRef = useRef<InputRootElement>(null)
   const inputRef = useRef<InputElement>(null)
 
@@ -63,23 +59,10 @@ const CustomInput: FC<Props> = ({
   })
 
   const handleBlur = useCallback(() => {
-    if (isInputFocused) inputRef.current?.focus({ preventScroll: true })
-  }, [isInputFocused])
+    inputRef.current?.focus({ preventScroll: true })
+  }, [])
 
   useEffect(() => inputRef.current?.focus(), [])
-
-  const handleInput = useCallback(
-    (event: ChangeEvent<HTMLDivElement>) => {
-      const newInputValue =
-        event.target.textContent
-          ?.replace('/', OperatorKeys.Div)
-          .replace('*', OperatorKeys.Mult) || ''
-
-      onInput(newInputValue)
-    },
-
-    [onInput]
-  )
 
   useCaretAnimation({
     caretElem: caretRef.current,

@@ -71,7 +71,7 @@ const ExpressionInput: FC = () => {
       <CustomInput
         value={inputValue}
         valueOneString={inputValueOneString}
-        onInput={(newValue) => console.log(newValue)}
+        // onInput={(newValue) => newValue}
         fontSize={5.5}
         minFontSize={3.5}
         caretPosition={cursorPosition}

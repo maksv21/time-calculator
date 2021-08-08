@@ -1,4 +1,5 @@
 {
+  "ignorePatterns": ["commitlint.config.js"],
   "extends": [
     "react-app",
     "plugin:jsx-a11y/recommended",
