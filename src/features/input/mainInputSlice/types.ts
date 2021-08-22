@@ -8,7 +8,7 @@ export interface MainInputState {
   valueToRender: ValueToRender
   preResult: null | string
   error: string | null
-  cursorPosition: number
+  caretPosition: number
 }
 
 export type NumberKeys =
@@ -37,9 +37,9 @@ export const DEL_KEY = 'DEL_KEY'
 export type GeneralKey = NumberKeys | OperatorKeys
 
 export interface HandleKeyPressFunc {
-  (prevInputValue: string, cursorPosition: number, pressedKey?: GeneralKey): {
-    newInputValue: string
-    newCursorPosition: number
+  (prevInputValue: string, caretPosition: number, pressedKey?: GeneralKey): {
+    newValue: string
+    newCaretPosition: number
     isTestModeStrict: boolean
   }
 }

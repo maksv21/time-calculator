@@ -10,48 +10,86 @@ const initialState: MainInputState = {
   valueToRender: '',
   preResult: null,
   error: null,
-  cursorPosition: 0,
+  caretPosition: 0,
 }
 
 const handleGeneralKeyPress: HandleKeyPressFunc = (
   prevInputValue,
-  cursorPosition,
+  caretPosition,
   pressedKey
 ) => {
   const gluedValue =
-    prevInputValue.substring(0, cursorPosition) +
+    prevInputValue.substring(0, caretPosition) +
     pressedKey +
-    prevInputValue.substring(cursorPosition)
+    prevInputValue.substring(caretPosition)
 
-  const newInputValue = gluedValue // todo: CHAR-38 runTextEnhancers(prevInputValue, gluedValue)
+  const newValue = gluedValue // todo: CHAR-38 runTextEnhancers(prevInputValue, gluedValue)
 
   return {
-    newInputValue,
-    newCursorPosition: cursorPosition + 1,
+    newValue,
+    newCaretPosition: caretPosition + 1,
     isTestModeStrict: true,
   }
 }
 
 const handleDelKeyPress: HandleKeyPressFunc = (
   prevInputValue,
-  cursorPosition
+  caretPosition
 ) => {
   const isTestModeStrict = false
 
-  if (cursorPosition !== 0) {
+  if (caretPosition !== 0) {
     return {
-      newInputValue:
-        prevInputValue.slice(0, cursorPosition - 1) +
-        prevInputValue.slice(cursorPosition),
-      newCursorPosition: cursorPosition - 1,
+      newValue:
+        prevInputValue.slice(0, caretPosition - 1) +
+        prevInputValue.slice(caretPosition),
+      newCaretPosition: caretPosition - 1,
       isTestModeStrict,
     }
   }
 
   return {
-    newInputValue: prevInputValue.slice(1),
-    newCursorPosition: cursorPosition,
+    newValue: prevInputValue.slice(1),
+    newCaretPosition: caretPosition,
     isTestModeStrict,
+  }
+}
+
+const setNewValueToState = ({
+  state,
+  testedInputValue,
+  newValue,
+  newCaretPosition,
+}: {
+  state: MainInputState
+  testedInputValue: ReturnType<typeof runTextTesters>
+  newValue: string
+  newCaretPosition: number
+}) => {
+  if (testedInputValue.isCorrect) {
+    state.value = newValue
+
+    const preResult = calculateTime(newValue)
+
+    if (preResult.isCorrect) {
+      state.preResult = preResult.value
+      state.error = null
+    } else {
+      state.preResult = ''
+      state.error = preResult.error
+    }
+
+    state.valueToRender = newValue
+
+    state.caretPosition = newCaretPosition
+  } else if (testedInputValue.valueToRender) {
+    state.value = newValue
+
+    if (testedInputValue.error) state.error = testedInputValue.error
+    state.valueToRender = testedInputValue.valueToRender
+
+    state.preResult = null
+    state.caretPosition = newCaretPosition
   }
 }
 
@@ -65,42 +103,23 @@ export const mainInputSlice = createSlice({
     ) => {
       const pressedKey = action.payload
 
-      const { newInputValue, newCursorPosition, isTestModeStrict } =
+      const { newValue, newCaretPosition, isTestModeStrict } =
         pressedKey === DEL_KEY
-          ? handleDelKeyPress(state.value, state.cursorPosition)
-          : handleGeneralKeyPress(state.value, state.cursorPosition, pressedKey)
+          ? handleDelKeyPress(state.value, state.caretPosition)
+          : handleGeneralKeyPress(state.value, state.caretPosition, pressedKey)
 
       const testedInputValue = runTextTesters({
         prevValue: state.value,
-        newValue: newInputValue,
+        newValue,
         isTestModeStrict,
       })
 
-      if (testedInputValue.isCorrect) {
-        state.value = newInputValue
-
-        const preResult = calculateTime(newInputValue)
-
-        if (preResult.isCorrect) {
-          state.preResult = preResult.value
-          state.error = null
-        } else {
-          state.preResult = ''
-          state.error = preResult.error
-        }
-
-        state.valueToRender = newInputValue
-
-        state.cursorPosition = newCursorPosition
-      } else if (testedInputValue.valueToRender) {
-        state.value = newInputValue
-
-        if (testedInputValue.error) state.error = testedInputValue.error
-        state.valueToRender = testedInputValue.valueToRender
-
-        state.preResult = null
-        state.cursorPosition = newCursorPosition
-      }
+      setNewValueToState({
+        state,
+        testedInputValue,
+        newValue,
+        newCaretPosition,
+      })
     },
 
     // todo: CHAR-61, add calculated flag
@@ -110,7 +129,7 @@ export const mainInputSlice = createSlice({
         state.valueToRender = state.value
         state.preResult = null
 
-        state.cursorPosition = state.value.length
+        state.caretPosition = state.value.length
       } else {
         state.preResult = state.error
       }
@@ -118,8 +137,31 @@ export const mainInputSlice = createSlice({
 
     clearAllKeyPressed: () => ({ ...initialState }),
 
-    cursorPositionChanged: (state, action: PayloadAction<number>) => {
-      state.cursorPosition = action.payload
+    caretPositionChanged: (state, action: PayloadAction<number>) => {
+      state.caretPosition = action.payload
+    },
+
+    hardwareKeyPressed: (
+      state,
+      action: PayloadAction<{
+        newValue: string
+        newCaretPosition: number
+        isTestModeStrict: boolean
+      }>
+    ) => {
+      const { newValue, newCaretPosition, isTestModeStrict } = action.payload
+      const testedInputValue = runTextTesters({
+        prevValue: state.value,
+        newValue: action.payload.newValue,
+        isTestModeStrict,
+      })
+
+      setNewValueToState({
+        state,
+        testedInputValue,
+        newValue,
+        newCaretPosition,
+      })
     },
   },
 })
@@ -128,7 +170,8 @@ export const {
   generalOrDelKeyPressed,
   equalsKeyPressed,
   clearAllKeyPressed,
-  cursorPositionChanged,
+  caretPositionChanged,
+  hardwareKeyPressed,
 } = mainInputSlice.actions
 
 export default mainInputSlice.reducer

@@ -10,6 +10,12 @@ const time = '(\\d+:\\d*)'
 
 export const testersArr: TextTester[] = [
   {
+    regExp: /[^÷×\-+:.\d]/g,
+    errorText: 'Incorrect characters',
+    isCritical: true,
+  },
+
+  {
     regExp: /\d{11,}/g,
     errorText: 'Number is too big',
     isCritical: true,

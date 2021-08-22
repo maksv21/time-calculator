@@ -1,27 +1,50 @@
 import { useCallback, useMemo } from 'react'
 
 import CustomInput from 'features/input/ExpressionInput/CustomInput'
-import { cursorPositionChanged } from 'features/input/mainInputSlice'
+import {
+  caretPositionChanged,
+  equalsKeyPressed,
+  hardwareKeyPressed,
+} from 'features/input/mainInputSlice'
 import { useAppDispatch, useAppSelector } from 'app/hooks'
 import useStyles from './styles'
 
 import type { FC } from 'react'
 import { TypesOfRenderValue } from '../mainInputSlice/utils/textTesters/runTextTesters'
-import type { InputValue } from './CustomInput/types'
+import type { InputHandler, InputValue } from './CustomInput/types'
 
 // it's too hard to make keys for input values, so just remake them on each render
-const makeUniqueKey = () => Date.now() + Math.random()
+const makeUniqueKey = () => {
+  const res = Date.now() + Math.random()
+  console.log('res', res)
+  return res
+  // fix if paste a lot of incorrect value
+}
 
 const ExpressionInput: FC = () => {
   const styles = useStyles()
 
-  const { valueToRender, preResult, cursorPosition } = useAppSelector(
+  const { valueToRender, preResult, caretPosition } = useAppSelector(
     (state) => state.mainInput
   )
 
   const dispatch = useAppDispatch()
-  const handleCursorPositionChange = useCallback(
-    (newCursorPosition) => dispatch(cursorPositionChanged(newCursorPosition)),
+  const handleCaretPositionChange = useCallback(
+    (newCaretPosition: number) =>
+      dispatch(caretPositionChanged(newCaretPosition)),
+    [dispatch]
+  )
+
+  const handleInput = useCallback<InputHandler>(
+    (newValue, newCaretPosition, isTestModeStrict) =>
+      dispatch(
+        hardwareKeyPressed({ newValue, newCaretPosition, isTestModeStrict })
+      ),
+    [dispatch]
+  )
+
+  const handleEqualsKeyPress = useCallback(
+    () => dispatch(equalsKeyPressed()),
     [dispatch]
   )
 
@@ -71,11 +94,12 @@ const ExpressionInput: FC = () => {
       <CustomInput
         value={inputValue}
         valueOneString={inputValueOneString}
-        // onInput={(newValue) => newValue}
+        onInput={handleInput}
+        onEqualsKeyPressed={handleEqualsKeyPress}
         fontSize={5.5}
         minFontSize={3.5}
-        caretPosition={cursorPosition}
-        onCaretPositionChange={handleCursorPositionChange}
+        caretPosition={caretPosition}
+        onCaretPositionChange={handleCaretPositionChange}
       />
       <div className={styles.preResult}>{preResult}</div>
     </div>

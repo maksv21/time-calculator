@@ -8,3 +8,8 @@ export interface CaretPositionChangeHandler {
 }
 
 export type InputValue = string | null | JSX.Element[]
+export type InputHandler = (
+  newInputValue: string,
+  newCaretPosition: number,
+  isTestModeStrict: boolean
+) => void

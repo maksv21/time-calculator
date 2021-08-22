@@ -8,6 +8,7 @@ import type {
   InputRootElement,
   CaretElement,
   InputValue,
+  InputHandler,
 } from './types'
 
 import useMouseWheelScroll from './hooks/useMouseWheelScroll'
@@ -15,15 +16,17 @@ import useCaretPosition from './hooks/useCaretPosition'
 import useCaretAnimation from './hooks/useCaretAnimation'
 import useDynamicFontSize from './hooks/useDynamicFontSize'
 import useCaretMargin from './hooks/useCaretMargin'
+import useHardwareKeyboard from './hooks/useHardwareKeyboard'
 
 interface Props {
   value: InputValue
   valueOneString: string | null
-  // onInput: (newInputValue: string) => void
-  caretPosition: number
-  onCaretPositionChange: CaretPositionChangeHandler
   fontSize?: number // rem
   minFontSize?: number // rem
+  caretPosition: number
+  onInput: InputHandler
+  onEqualsKeyPressed: () => void
+  onCaretPositionChange: CaretPositionChangeHandler
 }
 
 const CustomInput: FC<Props> = ({
@@ -32,13 +35,26 @@ const CustomInput: FC<Props> = ({
   fontSize = 1.6,
   minFontSize,
   caretPosition,
+  onInput,
+  onEqualsKeyPressed,
   onCaretPositionChange,
 }) => {
+  const isInputFocused = true
+
   const rootRef = useRef<InputRootElement>(null)
   const inputRef = useRef<InputElement>(null)
 
   const caretRef = useRef<CaretElement>(null)
   const inputForCalculationRef = useRef<InputElement>(null)
+
+  useHardwareKeyboard({
+    isInputFocused,
+    valueOneString,
+    caretPosition,
+    onInput,
+    onCaretPositionChange,
+    onEqualsKeyPressed,
+  })
 
   const currentFontSize = useDynamicFontSize({
     value,
@@ -62,7 +78,9 @@ const CustomInput: FC<Props> = ({
     inputRef.current?.focus({ preventScroll: true })
   }, [])
 
-  useEffect(() => inputRef.current?.focus(), [])
+  useEffect(() => {
+    if (isInputFocused) inputRef.current?.focus()
+  }, [isInputFocused])
 
   useCaretAnimation({
     caretElem: caretRef.current,
