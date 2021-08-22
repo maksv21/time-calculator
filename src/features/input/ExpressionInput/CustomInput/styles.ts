@@ -6,11 +6,12 @@ export interface Props {
   fontSize: number
 }
 
-const inputPadding = '25px'
-const caretWidth = '2px'
+export const inputPadding = 25
+const caretWidth = 2
 
 const useStyles = makeStyles<Theme, Props>((theme) => ({
   root: {
+    cursor: 'text',
     display: 'flex',
     overflow: 'auto',
     /* Hide scrollbar for Chromium browsers */
@@ -21,12 +22,12 @@ const useStyles = makeStyles<Theme, Props>((theme) => ({
     'scrollbar-width': 'none',
   },
   input: {
+    minHeight: 64,
     position: 'relative',
-
     whiteSpace: 'nowrap',
     fontSize: (props) => `${props.fontSize}rem`,
     marginLeft: 'auto',
-    padding: `0 ${inputPadding}`,
+    padding: `0 ${inputPadding}px`,
     transition: 'font-size 0.1s',
     outline: 'none',
   },
@@ -50,9 +51,7 @@ const useStyles = makeStyles<Theme, Props>((theme) => ({
     width: caretWidth,
     height: (props) => `${props.fontSize + 0.5}rem`,
     position: 'absolute',
-    marginRight: `${
-      parseInt(inputPadding, 10) - parseInt(caretWidth, 10) / 2
-    }px`, // -
+    marginRight: `${inputPadding - caretWidth / 2}px`, // -
     transition: 'all 0.1s',
     pointerEvents: 'none',
   },

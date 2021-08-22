@@ -14,12 +14,7 @@ import { TypesOfRenderValue } from '../mainInputSlice/utils/textTesters/runTextT
 import type { InputHandler, InputValue } from './CustomInput/types'
 
 // it's too hard to make keys for input values, so just remake them on each render
-const makeUniqueKey = () => {
-  const res = Date.now() + Math.random()
-  console.log('res', res)
-  return res
-  // fix if paste a lot of incorrect value
-}
+const makeUniqueKey = () => Date.now() + Math.random()
 
 const ExpressionInput: FC = () => {
   const styles = useStyles()

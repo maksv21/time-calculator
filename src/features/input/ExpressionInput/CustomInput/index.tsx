@@ -17,6 +17,7 @@ import useCaretAnimation from './hooks/useCaretAnimation'
 import useDynamicFontSize from './hooks/useDynamicFontSize'
 import useCaretMargin from './hooks/useCaretMargin'
 import useHardwareKeyboard from './hooks/useHardwareKeyboard'
+import useScrollToCaret from './hooks/useScrollToCaret'
 
 interface Props {
   value: InputValue
@@ -95,6 +96,8 @@ const CustomInput: FC<Props> = ({
     valueOneString,
     caretPosition
   )
+
+  useScrollToCaret(rootRef.current, caretRef.current, valueOneString)
 
   return (
     <>
