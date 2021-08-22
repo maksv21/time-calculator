@@ -9,7 +9,10 @@ const useCaretMargin = (
   const [margin, setMargin] = useState(0)
 
   const handleCaretPositionUpdate: () => number | void = useCallback(() => {
-    if (!inputElem?.firstChild || !inputValue) return
+    if (!inputElem?.firstChild || !inputValue) {
+      setMargin(0)
+      return
+    }
     // timeout to get new position after rendering
     const timerId = setTimeout(() => {
       if (!inputElem?.firstChild || !inputValue) return

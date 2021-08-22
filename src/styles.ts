@@ -4,7 +4,6 @@ const useStyles = makeStyles(() => ({
   root: {
     height: '100%',
     width: '100%',
-    maxHeight: '1200px',
     background: '#f5f5f5',
   },
 
