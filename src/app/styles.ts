@@ -1,14 +1,14 @@
 import { makeStyles } from '@material-ui/core'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
     width: '100%',
-    background: '#f5f5f5',
+    background: theme.palette.background.default,
   },
 
   expressionInput: {
-    background: 'white',
+    background: theme.palette.background.paper,
     height: '30%',
     position: 'relative',
     boxShadow: '0px 0px 7px rgb(0 0 0 / 25%)',
@@ -19,8 +19,6 @@ const useStyles = makeStyles(() => ({
     maxWidth: '900px',
     margin: '0 auto',
   },
-
-  caret: {},
 }))
 
 export default useStyles

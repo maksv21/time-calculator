@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
     display: 'flex',
@@ -10,12 +10,12 @@ const useStyles = makeStyles(() => ({
   },
 
   preResult: {
-    height: '30px', // height if there's no value
+    height: '36px', // height if there's no value
     fontSize: '2.5rem',
     marginRight: '25px',
     overflow: 'auto',
     whiteSpace: 'nowrap',
-    color: '#616161',
+    color: theme.palette.text.secondary,
   },
 }))
 

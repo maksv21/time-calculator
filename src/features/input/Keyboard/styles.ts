@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
-    background: '#f5f5f5',
+    background: theme.palette.background.default,
   },
 
   button: {
@@ -24,8 +24,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   rightButtons: {
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    background:
+      theme.palette.type === 'dark'
+        ? theme.palette.grey[900]
+        : theme.palette.primary.main,
+
+    color: theme.palette.text.primary,
   },
 }))
 

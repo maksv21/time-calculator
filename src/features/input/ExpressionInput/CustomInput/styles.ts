@@ -30,6 +30,8 @@ const useStyles = makeStyles<Theme, Props>((theme) => ({
     padding: `0 ${inputPadding}px`,
     transition: 'font-size 0.1s',
     outline: 'none',
+    display: 'flex',
+    alignItems: 'center',
   },
 
   inputForCalculation: {
@@ -47,9 +49,9 @@ const useStyles = makeStyles<Theme, Props>((theme) => ({
     animation: '$blinking 1.3s step-start 0s infinite',
   },
   caret: {
-    background: theme.palette.primary.contrastText,
+    background: theme.palette.getContrastText(theme.palette.background.default),
     width: caretWidth,
-    height: (props) => `${props.fontSize + 0.5}rem`,
+    height: (props) => `${props.fontSize + 1}rem`,
     position: 'absolute',
     marginRight: `${inputPadding - caretWidth / 2}px`, // -
     transition: 'all 0.1s',
