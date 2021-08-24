@@ -50,16 +50,31 @@ const Keyboard: FC = () => {
     [dispatch]
   )
 
+  const vibrate = useCallback(() => {
+    navigator.vibrate(5)
+  }, [])
+
   const handleDelLongPress = useLongPress(
-    useCallback(() => dispatch(clearAllKeyPressed()), [dispatch]),
-    { isPreventDefault: false }
+    useCallback(() => {
+      vibrate()
+      dispatch(clearAllKeyPressed())
+    }, [dispatch, vibrate]),
+    { isPreventDefault: false, delay: 350 }
   )
 
   const CalcButton: FC<{
-    onClick: () => void
+    onMouseUp: () => void
+    onTouchStart?: (e: React.TouchEvent<HTMLButtonElement>) => void
     children: string
-  }> = ({ onClick, children, ...props }) => (
-    <ButtonBase className={styles.button} onClick={onClick} {...props}>
+  }> = ({ children, onTouchStart, ...props }) => (
+    <ButtonBase
+      {...props}
+      className={styles.button}
+      onTouchStart={(e) => {
+        vibrate()
+        if (onTouchStart) onTouchStart(e)
+      }}
+    >
       {children}
     </ButtonBase>
   )
@@ -72,7 +87,7 @@ const Keyboard: FC = () => {
             {buttonsRow.map((btnValue) => (
               <CalcButton
                 key={btnValue.toString()}
-                onClick={() => handleKeyClick(btnValue)}
+                onMouseUp={() => handleKeyClick(btnValue)}
               >
                 {btnValue}
               </CalcButton>
@@ -88,20 +103,26 @@ const Keyboard: FC = () => {
         xs={3}
         direction="column"
       >
-        <CalcButton onClick={handleDelClick} {...handleDelLongPress}>
+        <CalcButton
+          {...handleDelLongPress}
+          onMouseUp={() => {
+            handleDelClick()
+            handleDelLongPress.onMouseUp()
+          }}
+        >
           DEL
         </CalcButton>
 
         {OPERATORS_RIGHT.map((btnValue) => (
           <CalcButton
             key={btnValue.toString()}
-            onClick={() => handleKeyClick(btnValue)}
+            onMouseUp={() => handleKeyClick(btnValue)}
           >
             {btnValue}
           </CalcButton>
         ))}
 
-        <CalcButton onClick={handleEqualsClick}>=</CalcButton>
+        <CalcButton onMouseUp={handleEqualsClick}>=</CalcButton>
       </Grid>
     </Grid>
   )
