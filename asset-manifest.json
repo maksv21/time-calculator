@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/time-calculator/static/css/main.d283e2cd.chunk.css",
-    "main.js": "/time-calculator/static/js/main.74d03698.chunk.js",
-    "main.js.map": "/time-calculator/static/js/main.74d03698.chunk.js.map",
+    "main.js": "/time-calculator/static/js/main.efb7d0f6.chunk.js",
+    "main.js.map": "/time-calculator/static/js/main.efb7d0f6.chunk.js.map",
     "runtime-main.js": "/time-calculator/static/js/runtime-main.86b60a32.js",
     "runtime-main.js.map": "/time-calculator/static/js/runtime-main.86b60a32.js.map",
     "static/js/2.686efe68.chunk.js": "/time-calculator/static/js/2.686efe68.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.86b60a32.js",
     "static/js/2.686efe68.chunk.js",
     "static/css/main.d283e2cd.chunk.css",
-    "static/js/main.74d03698.chunk.js"
+    "static/js/main.efb7d0f6.chunk.js"
   ]
 }
