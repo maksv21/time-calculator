@@ -1,13 +1,15 @@
 {
   "files": {
     "main.css": "/time-calculator/static/css/main.d283e2cd.chunk.css",
-    "main.js": "/time-calculator/static/js/main.ced7ec6d.chunk.js",
-    "main.js.map": "/time-calculator/static/js/main.ced7ec6d.chunk.js.map",
+    "main.js": "/time-calculator/static/js/main.74d03698.chunk.js",
+    "main.js.map": "/time-calculator/static/js/main.74d03698.chunk.js.map",
     "runtime-main.js": "/time-calculator/static/js/runtime-main.86b60a32.js",
     "runtime-main.js.map": "/time-calculator/static/js/runtime-main.86b60a32.js.map",
     "static/js/2.686efe68.chunk.js": "/time-calculator/static/js/2.686efe68.chunk.js",
     "static/js/2.686efe68.chunk.js.map": "/time-calculator/static/js/2.686efe68.chunk.js.map",
     "index.html": "/time-calculator/index.html",
+    "service-worker.js": "/time-calculator/service-worker.js",
+    "service-worker.js.map": "/time-calculator/service-worker.js.map",
     "static/css/main.d283e2cd.chunk.css.map": "/time-calculator/static/css/main.d283e2cd.chunk.css.map",
     "static/js/2.686efe68.chunk.js.LICENSE.txt": "/time-calculator/static/js/2.686efe68.chunk.js.LICENSE.txt"
   },
@@ -15,6 +17,6 @@
     "static/js/runtime-main.86b60a32.js",
     "static/js/2.686efe68.chunk.js",
     "static/css/main.d283e2cd.chunk.css",
-    "static/js/main.ced7ec6d.chunk.js"
+    "static/js/main.74d03698.chunk.js"
   ]
 }
