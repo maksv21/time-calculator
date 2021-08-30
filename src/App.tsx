@@ -18,7 +18,7 @@ const App: FC = () => {
   // so render the app only when final value was set
   const [shouldRender, setShouldRender] = useState(false)
   useEffect(() => {
-    setTimeout(() => setShouldRender(true))
+    setTimeout(() => setShouldRender(true), 1)
   }, [])
 
   return shouldRender ? (
