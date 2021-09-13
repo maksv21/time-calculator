@@ -1,0 +1,5 @@
+{
+    "env": {
+        "keyboardSelector": "[class^=makeStyles-keyboard-]"
+    }
+}

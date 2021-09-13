@@ -3,7 +3,6 @@
   "extends": [
     "react-app",
     "plugin:jsx-a11y/recommended",
-    // "airbnb-typescript"
     "airbnb-typescript-prettier",
 
     "prettier"
