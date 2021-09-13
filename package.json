@@ -10,8 +10,8 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/styles": "^4.11.4",
     "@reduxjs/toolkit": "^1.5.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
@@ -19,7 +19,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
     "@typescript-eslint/eslint-plugin": "^4.4.1",
-    "clsx": "^1.1.1",
+    "cypress": "^8.3.1",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-airbnb-typescript-prettier": "^4.2.0",
     "eslint-config-prettier": "^8.3.0",
@@ -50,7 +50,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint src/. --max-warnings 0",
     "lint:fix": "eslint src/. --fix --max-warnings 0",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"

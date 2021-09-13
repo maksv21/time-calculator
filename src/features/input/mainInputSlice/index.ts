@@ -5,7 +5,7 @@ import runTextTesters from './utils/textTesters/runTextTesters'
 import type { GeneralKey, HandleKeyPressFunc, MainInputState } from './types'
 import { DEL_KEY } from './types'
 
-const initialState: MainInputState = {
+export const initialState: MainInputState = {
   value: '',
   valueToRender: '',
   preResult: null,
