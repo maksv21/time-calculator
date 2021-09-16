@@ -4,7 +4,6 @@ const path = require('path')
 
 const pathToRootDir = path.join(__dirname, '..')
 const buildFolder = path.join(__dirname, '..', 'build')
-const currentVersion = require(path.join(pathToRootDir, 'package.json')).version;
 
 const shouldSkipTests = !!process.argv.find(param => param === '--skip-tests')
 
@@ -43,10 +42,12 @@ const runCommand = (commandToExecute, noData) => {
   })
 }
 
+// to remove tag in case or error
+let newVersion = null;
+
 (async () => {
   try {
     await runCommand(`cd ${pathToRootDir}`)
-
     try {
       await runCommand('git status --porcelain', true) 
     } catch (e) {
@@ -58,6 +59,9 @@ const runCommand = (commandToExecute, noData) => {
     
     await runCommand('git fetch')
     await runCommand('git checkout origin/main')
+    await runCommand('npm version patch')
+
+    newVersion = require(path.join(pathToRootDir, 'package.json')).version;
     
     if(!shouldSkipTests) {
       log('start testing...')
@@ -106,12 +110,16 @@ const runCommand = (commandToExecute, noData) => {
     log('pushing changes to GitHub Pages...')  
     
     await runCommand('git add --all')
-    await runCommand(`git commit -m v${currentVersion}`)
+    await runCommand(`git commit -m v${newVersion}`)
     await runCommand('git push')
 
     console.log('🎉 deploy finished successfully 🎉')
   } catch (e) {
     if(e) logErr('Build failed with the following code: ' + e)
     else logErr('Build failed')
+
+    if(newVersion) await runCommand(`git tag -d v${newVersion}`)
+  } finally {
+    await runCommand('git checkout dev')
   }
 })()
