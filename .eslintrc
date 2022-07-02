@@ -4,7 +4,6 @@
     "react-app",
     "plugin:jsx-a11y/recommended",
     "airbnb-typescript-prettier",
-
     "prettier"
   ],
   "plugins": [
@@ -18,7 +17,8 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "paths": ["src"]
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".scss"],
+        "moduleDirectory": ["src", "node_modules"]
       }
     }
   },

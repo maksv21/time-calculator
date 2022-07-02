@@ -5,7 +5,6 @@ import { store } from 'app/store'
 import createTheme from 'app/theme'
 import AppLayout from 'app/AppLayout'
 import type { FC } from 'react'
-
 const App: FC = () => {
   const isDarkModeEnabled = useMediaQuery('(prefers-color-scheme: dark)')
 
@@ -21,7 +20,7 @@ const App: FC = () => {
     setTimeout(() => setShouldRender(true), 1)
   }, [])
 
-  return shouldRender ? (
+  return (
     <StrictMode>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
@@ -30,7 +29,7 @@ const App: FC = () => {
         </ThemeProvider>
       </Provider>
     </StrictMode>
-  ) : null
+  )
 }
 
 export default App
